@@ -1,10 +1,6 @@
 #include "common.h"
 #include "shader.h"
 
-#include <spdlog/spdlog.h>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 void OnFramebufferSizeChange(GLFWwindow *window, int width, int height) {
     SPDLOG_INFO("framebuffer size changed: ({} x {})", width, height);
     glViewport(0, 0, width, height);
@@ -58,8 +54,8 @@ int main(int argc, const char **argv) {
         glfwTerminate();
         return -1;
     }
-    // auto glVersion = glGetString(GL_VERSION);
-    // SPDLOG_INFO("OpenGL context version: {}", glVersion);
+    auto glVersion = glGetString(GL_VERSION);
+    SPDLOG_INFO("OpenGL context version: {}", reinterpret_cast<const char*>(glVersion));
 
     auto vertexShader = Shader::CreateFromFile("./shader/simple.vs", GL_VERTEX_SHADER);
     auto fragmentShader = Shader::CreateFromFile("./shader/simple.fs", GL_FRAGMENT_SHADER);

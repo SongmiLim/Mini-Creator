@@ -43,7 +43,7 @@ set(DEP_LIBS ${DEP_LIBS} glfw3)
 ExternalProject_Add(
     dep_glad
     GIT_REPOSITORY "https://github.com/Dav1dde/glad"
-    GIT_TAG "v2.0.0"
+    GIT_TAG "v2.x.x"
     GIT_SHALLOW 1
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
