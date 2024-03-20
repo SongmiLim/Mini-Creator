@@ -19,16 +19,12 @@ bool Context::Init() {
         1, 2, 3, // second triangle
     };
     
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 18, vertices, GL_STATIC_DRAW);
-
-    glGenVertexArrays(1, &m_vertexArrayObject);
-    glBindVertexArray(m_vertexArrayObject);
+    m_vertexLayout = VertexLayout::Create();
 	
     m_vertexBuffer= Buffer::CreateWithData(GL_ARRAY_BUFFER, GL_STATIC_DRAW,
      vertices, sizeof(float) * 12);
     
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+    m_vertexLayout->SetAttrib(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
     
     m_indexBuffer = Buffer::CreateWithData(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW,
      indices, sizeof(uint32_t) * 6);
