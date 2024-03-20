@@ -1,5 +1,11 @@
 #include "program.h"
 
+Program::~Program() {
+  if (m_program) {
+    glDeleteProgram(m_program);
+  }
+}
+
 ProgramUPtr Program::Create(const std::vector<ShaderPtr> &shaders) {
     auto program = ProgramUPtr(new Program());
 
@@ -28,8 +34,6 @@ bool Program::Link(const std::vector<ShaderPtr> &shaders) {
     return true;
 }
 
-Program::~Program() {
-  if (m_program) {
-    glDeleteProgram(m_program);
-  }
+void Program::Use() const{
+    glUseProgram(m_program);
 }
