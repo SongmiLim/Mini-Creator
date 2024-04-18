@@ -21,6 +21,18 @@ void OnKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods)
     }
 }
 
+void OnMouseButton(GLFWwindow* window, int button, int action, int modifier) {
+  auto context = (Context*)glfwGetWindowUserPointer(window);
+  double x, y;
+  glfwGetCursorPos(window, &x, &y);
+  context->MouseButton(button, action, x, y);
+}
+
+void OnCursorPos(GLFWwindow* window, double x, double y) {
+    auto context = (Context*)glfwGetWindowUserPointer(window);
+    context->MouseMove(x, y);
+}
+
 int main(int argc, const char **argv) {
     SPDLOG_INFO("Start program");
 
@@ -71,6 +83,8 @@ int main(int argc, const char **argv) {
     OnFramebufferSizeChange(window, WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChange);
     glfwSetKeyCallback(window, OnKeyEvent);
+	glfwSetCursorPosCallback(window, OnCursorPos);
+    glfwSetMouseButtonCallback(window, OnMouseButton);
 
     // start glfw loop
     SPDLOG_INFO("Start main loop");
