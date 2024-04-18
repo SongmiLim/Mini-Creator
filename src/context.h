@@ -13,7 +13,6 @@ class Context {
 public:
     static ContextUPtr Create();
     void Render();    
-    void ProcessInput(GLFWwindow* window);
 private:
     Context() {}
     bool Init();
