@@ -123,3 +123,23 @@ void Context::Render() {
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     }
 }
+
+void Context::ProcessInput(GLFWwindow* window) {
+    const float cameraSpeed = 0.001f;
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        m_cameraPos += cameraSpeed * m_cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        m_cameraPos -= cameraSpeed * m_cameraFront;
+
+    auto cameraRight = glm::normalize(glm::cross(m_cameraUp, -m_cameraFront));
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        m_cameraPos += cameraSpeed * cameraRight;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        m_cameraPos -= cameraSpeed * cameraRight;    
+
+    auto cameraUp = glm::normalize(glm::cross(-m_cameraFront, cameraRight));
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        m_cameraPos += cameraSpeed * cameraUp;
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        m_cameraPos -= cameraSpeed * cameraUp;
+}
