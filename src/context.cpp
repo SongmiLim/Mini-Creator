@@ -179,7 +179,7 @@ void Context::MouseMove(double x, double y) {
 }
 
 void Context::MouseButton(int button, int action, double x, double y) {
-  if (button == GLFW_MOUSE_BUTTON_RIGHT) {
+  if (button == GLFW_MOUSE_BUTTON_LEFT) {
     if (action == GLFW_PRESS) {
       m_prevMousePos = glm::vec2((float)x, (float)y);
       m_cameraControl = true;
@@ -188,4 +188,15 @@ void Context::MouseButton(int button, int action, double x, double y) {
       m_cameraControl = false;
     }
   }
+}
+
+void Context::MouseScroll(double xoffset, double yoffset) {
+    m_cameraFov -= (float)yoffset;
+    if (m_cameraFov < 1.0f)
+        m_cameraFov = 1.0f;
+    if (m_cameraFov > 45.0f)
+        m_cameraFov = 45.0f;
+    
+    // const float scrollSpeed = 0.1f;
+    // m_cameraPos += m_cameraFront * (float)yoffset * scrollSpeed;
 }

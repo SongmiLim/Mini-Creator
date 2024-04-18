@@ -17,6 +17,7 @@ public:
     void Reshape(int width, int height);
     void MouseMove(double x, double y);
     void MouseButton(int button, int action, double x, double y);
+    void MouseScroll(double xoffset, double yoffset);
 
 private:
     Context() {}
