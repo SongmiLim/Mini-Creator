@@ -77,7 +77,7 @@ bool Context::Init() {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
     // set image class for texture
-    auto image = Image::Load("./image/awesomeface.png");
+    auto image = Image::Load("./image/wall.jpg");
     if (!image) {
       SPDLOG_INFO("set default image");
       image = Image::Create(512, 512);
@@ -88,7 +88,9 @@ bool Context::Init() {
 
     // generate and bind texture object
     m_texture = Texture::CreateFromImage(image.get());
-    
+
+    m_program->Use();
+
     return true;
 }
 
@@ -109,25 +111,10 @@ void Context::Render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
-    auto projection = glm::perspective(glm::radians(45.0f), (float)640 / (float)480, 0.01f, 20.0f);
-
-    auto cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-    auto cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-    auto cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
-    auto cameraZ = glm::normalize(cameraPos - cameraTarget);
-    auto cameraX = glm::normalize(glm::cross(cameraUp, cameraZ));
-    auto cameraY = glm::cross(cameraZ, cameraX);
-
-    auto cameraMat = glm::mat4(
-        glm::vec4(cameraX, 0.0f),
-        glm::vec4(cameraY, 0.0f),
-        glm::vec4(cameraZ, 0.0f),
-        glm::vec4(cameraPos, 1.0f)
-    );
-    auto view = glm::inverse(cameraMat);
-
-    for (size_t i = 0; i < cubePositions.size(); i++){
+    auto projection = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH/ (float)WINDOW_HEIGHT, 0.01f, 20.0f);
+    auto view = glm::lookAt(m_cameraPos, m_cameraPos + m_cameraFront, m_cameraUp);
+    
+    for (size_t i = 0; i < cubePositions.size(); i++) {
         auto& pos = cubePositions[i];
         auto model = glm::translate(glm::mat4(1.0f), pos);
         model = glm::rotate(model, glm::radians((float)glfwGetTime() * 120.0f + 20.0f * (float)i), glm::vec3(1.0f, 0.5f, 0.0f));
@@ -135,5 +122,24 @@ void Context::Render() {
         m_program->SetUniform("transform", transform);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     }
-    m_program->Use();
+}
+
+void Context::ProcessInput(GLFWwindow* window) {
+    const float cameraSpeed = 0.001f;
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        m_cameraPos += cameraSpeed * m_cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        m_cameraPos -= cameraSpeed * m_cameraFront;
+
+    auto cameraRight = glm::normalize(glm::cross(m_cameraUp, -m_cameraFront));
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        m_cameraPos += cameraSpeed * cameraRight;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        m_cameraPos -= cameraSpeed * cameraRight;    
+
+    auto cameraUp = glm::normalize(glm::cross(-m_cameraFront, cameraRight));
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        m_cameraPos += cameraSpeed * cameraUp;
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        m_cameraPos -= cameraSpeed * cameraUp;
 }
