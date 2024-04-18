@@ -5,7 +5,8 @@
 
 void OnFramebufferSizeChange(GLFWwindow *window, int width, int height) {
     SPDLOG_INFO("framebuffer size changed: ({} x {})", width, height);
-    glViewport(0, 0, width, height);
+    auto context = (Context*)glfwGetWindowUserPointer(window);
+    context->Reshape(width, height);
 }
 
 void OnKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods) {
@@ -65,7 +66,7 @@ int main(int argc, const char **argv) {
         return -1;
     }
 
-    glfwSetWindowPos(window, WINDOW_WIDTH, WINDOW_HEIGHT);
+    glfwSetWindowUserPointer(window, context.get());
 
     OnFramebufferSizeChange(window, WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChange);
