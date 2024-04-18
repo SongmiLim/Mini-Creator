@@ -13,6 +13,8 @@ class Context {
 public:
     static ContextUPtr Create();
     void Render();    
+    void ProcessInput(GLFWwindow* window);
+    
 private:
     Context() {}
     bool Init();
@@ -22,6 +24,11 @@ private:
     BufferUPtr m_vertexBuffer;
     BufferUPtr m_indexBuffer;
     TextureUPtr m_texture;
+
+    //camera parameter
+    glm::vec3 m_cameraPos { glm::vec3(0.0f, 0.0f, 3.0f) };
+    glm::vec3 m_cameraFront { glm::vec3(0.0f, 0.0f, -1.0f) };
+    glm::vec3 m_cameraUp { glm::vec3(0.0f, 1.0f, 0.0f) };
 };
 
 #endif // __CONTEXT_H__

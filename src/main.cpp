@@ -9,14 +9,12 @@ void OnFramebufferSizeChange(GLFWwindow *window, int width, int height) {
 }
 
 void OnKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods) {
-    SPDLOG_INFO("key: {}, scancode: {}, action: {}, mods: {}{}{}",
-                key, scancode,
-                action == GLFW_PRESS ? "Pressed" : action == GLFW_RELEASE ? "Released"
-                                               : action == GLFW_REPEAT    ? "Repeat"
-                                                                          : "Unknown",
-                mods & GLFW_MOD_CONTROL ? "C" : "-",
-                mods & GLFW_MOD_SHIFT ? "S" : "-",
-                mods & GLFW_MOD_ALT ? "A" : "-");
+    SPDLOG_INFO("key: {}, scancode: {}, action: {}, mods: {}{}{}", key, scancode, 
+    action == GLFW_PRESS ? "Pressed" : action == GLFW_RELEASE ? "Released" : action == GLFW_REPEAT ? "Repeat" : "Unknown",
+    mods & GLFW_MOD_CONTROL ? "C" : "-",
+    mods & GLFW_MOD_SHIFT ? "S" : "-",
+    mods & GLFW_MOD_ALT ? "A" : "-");
+
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
@@ -76,9 +74,10 @@ int main(int argc, const char **argv) {
     // start glfw loop
     SPDLOG_INFO("Start main loop");
     while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+        context->ProcessInput(window);
         context->Render();
         glfwSwapBuffers(window);
-        glfwPollEvents();
     }
 
     context.reset();
