@@ -33,6 +33,11 @@ void OnCursorPos(GLFWwindow* window, double x, double y) {
     context->MouseMove(x, y);
 }
 
+void OnMouseScroll(GLFWwindow* window, double x, double y) {
+    auto context = (Context*)glfwGetWindowUserPointer(window);
+    context->MouseScroll(x, y);
+}
+
 int main(int argc, const char **argv) {
     SPDLOG_INFO("Start program");
 
@@ -85,6 +90,7 @@ int main(int argc, const char **argv) {
     glfwSetKeyCallback(window, OnKeyEvent);
 	glfwSetCursorPosCallback(window, OnCursorPos);
     glfwSetMouseButtonCallback(window, OnMouseButton);
+    glfwSetScrollCallback(window, OnMouseScroll);
 
     // start glfw loop
     SPDLOG_INFO("Start main loop");
