@@ -96,8 +96,19 @@ bool Context::Init() {
 }
 
 void Context::Render() {
-    if (ImGui::Begin("my first ImGui window")) {
-        ImGui::Text("This is first text...");
+    if (ImGui::Begin("ui window")) {
+        ImGui::DragFloat3("camera pos", glm::value_ptr(m_cameraPos), 0.01f);
+        ImGui::DragFloat("camera Fov", &m_cameraFov, 0.5f, 1.0f, 45.0f);
+        ImGui::DragFloat("camera yaw", &m_cameraYaw, 0.5f);
+        ImGui::DragFloat("camera pitch", &m_cameraPitch, 0.5f, -89.0f, 89.0f);
+        ImGui::Separator();
+
+        if(ImGui::Button("reset camera")) {
+            m_cameraYaw = 0.0f;
+            m_cameraPitch = 0.0f;
+            m_cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+            m_cameraFov = 45.0f;
+        }
     }
     ImGui::End();
 
