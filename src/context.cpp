@@ -97,6 +97,11 @@ bool Context::Init() {
 
 void Context::Render() {
     if (ImGui::Begin("ui window")) {
+        if(ImGui::ColorEdit4("clear color", glm::value_ptr(m_clearColor))) {
+            glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
+        }
+        ImGui::Separator();
+
         ImGui::DragFloat3("camera pos", glm::value_ptr(m_cameraPos), 0.01f);
         ImGui::DragFloat("camera Fov", &m_cameraFov, 0.5f, 1.0f, 45.0f);
         ImGui::DragFloat("camera yaw", &m_cameraYaw, 0.5f);
