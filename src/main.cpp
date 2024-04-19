@@ -12,6 +12,7 @@ void OnFramebufferSizeChange(GLFWwindow *window, int width, int height) {
 }
 
 void OnKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods) {
+    ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
     SPDLOG_INFO("key: {}, scancode: {}, action: {}, mods: {}{}{}", key, scancode, 
     action == GLFW_PRESS ? "Pressed" : action == GLFW_RELEASE ? "Released" : action == GLFW_REPEAT ? "Repeat" : "Unknown",
     mods & GLFW_MOD_CONTROL ? "C" : "-",
@@ -21,6 +22,7 @@ void OnKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods)
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
+    
 }
 
 void OnMouseButton(GLFWwindow* window, int button, int action, int modifier) {
@@ -37,9 +39,15 @@ void OnCursorPos(GLFWwindow* window, double x, double y) {
     context->MouseMove(x, y);
 }
 
-void OnMouseScroll(GLFWwindow* window, double x, double y) {
+void OnMouseScroll(GLFWwindow* window, double xoffset, double yoffset) {
+    ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
+    
     auto context = (Context*)glfwGetWindowUserPointer(window);
-    context->MouseScroll(x, y);
+    context->MouseScroll(xoffset, yoffset);
+}
+
+void OnCharEvent(GLFWwindow* window, unsigned int ch) {
+    ImGui_ImplGlfw_CharCallback(window, ch);
 }
 
 int main(int argc, const char **argv) {
@@ -103,7 +111,9 @@ int main(int argc, const char **argv) {
 	glfwSetCursorPosCallback(window, OnCursorPos);
     glfwSetMouseButtonCallback(window, OnMouseButton);
     glfwSetScrollCallback(window, OnMouseScroll);
-
+    glfwSetCharCallback(window, OnCharEvent);
+    
+    
     // start glfw loop
     SPDLOG_INFO("Start main loop");
     while (!glfwWindowShouldClose(window)) {
