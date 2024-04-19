@@ -27,7 +27,7 @@ set(DEP_LIBS ${DEP_LIBS} spdlog$<$<CONFIG:Debug>:d>)
 ExternalProject_Add(
     dep_glfw
     GIT_REPOSITORY "https://github.com/glfw/glfw.git"
-    GIT_TAG "3.3.3"
+    GIT_TAG "3.3.10"
     GIT_SHALLOW 1
     UPDATE_COMMAND "" PATCH_COMMAND "" TEST_COMMAND ""
     CMAKE_ARGS
@@ -76,7 +76,7 @@ set(DEP_LIST ${DEP_LIST} dep_stb)
 ExternalProject_Add(
   dep_glm
   GIT_REPOSITORY "https://github.com/g-truc/glm"
-  GIT_TAG "1.0.0"
+  GIT_TAG "1.0.x"
   GIT_SHALLOW 1
   UPDATE_COMMAND ""
   PATCH_COMMAND ""
