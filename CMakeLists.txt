@@ -5,8 +5,8 @@ set(PROJECT_NAME mini_creator)
 set(CMAKE_CXX_STANDARD 17)
 
 set(WINDOW_NAME "Mini Creator")
-set(WINDOW_WIDTH 640)
-set(WINDOW_HEIGHT 480)
+set(WINDOW_WIDTH 1280)
+set(WINDOW_HEIGHT 960)
 
 # Declare the project
 project(${PROJECT_NAME})
