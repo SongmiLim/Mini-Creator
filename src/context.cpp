@@ -63,16 +63,14 @@ bool Context::Init() {
     m_indexBuffer = Buffer::CreateWithData(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW,
      indices, sizeof(uint32_t) * 36);
     
-    ShaderPtr vertShader = Shader::CreateFromFile("./shader/light.vs", GL_VERTEX_SHADER);
-    ShaderPtr fragShader = Shader::CreateFromFile("./shader/light.fs", GL_FRAGMENT_SHADER);
-    if (!vertShader || !fragShader)
-        return false;
-    SPDLOG_INFO("vertex shader id: {}", vertShader->Get());
-    SPDLOG_INFO("fragment shader id: {}", fragShader->Get());  
-  
     // link vertex, fragment shader
-    m_program = Program::Create({fragShader, vertShader});
-    if (!m_program)
+    m_simpleProgram = Program::Create("./shader/simple.vs", "./shader/simple.fs");
+    if (!m_simpleProgram)
+        return false;
+    SPDLOG_INFO("program id: {}", m_simpleProgram->Get());
+
+    m_program = Program::Create("./shader/light.vs", "./shader/light.fs");
+    if (!m_program) 
         return false;
     SPDLOG_INFO("program id: {}", m_program->Get());
 
