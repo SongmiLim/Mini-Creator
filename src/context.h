@@ -42,8 +42,19 @@ private:
     int m_width {WINDOW_WIDTH};
     int m_height {WINDOW_HEIGHT};
 
+    // animation
+    bool m_animation { true };
+
     // clear color
     glm::vec4 m_clearColor { glm::vec4(0.1f, 0.2f, 0.3f, 0.0f) };
+
+    // light parameter
+    glm::vec3 m_lightPos { glm::vec3(3.0f, 3.0f, 3.0f) };
+    glm::vec3 m_lightColor { glm::vec3(1.0f, 1.0f, 1.0f) };
+    glm::vec3 m_objectColor { glm::vec3(1.0f, 0.5f, 0.0f) };
+    float m_ambientStrength { 0.1f };
+    float m_specularStrength { 0.5f };
+    float m_specularShininess { 32.0f };
 };
 
 #endif // __CONTEXT_H__
