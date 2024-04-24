@@ -140,12 +140,12 @@ void Context::Render() {
     m_material.specular->Bind();
 
     auto modelTransform = glm::mat4(1.0f);
+    modelTransform = glm::rotate(modelTransform, glm::radians((m_animation ? (float)glfwGetTime() : 0.0f )* 120.0f + 20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     auto transform = projection * view * modelTransform;
-    
     m_program->SetUniform("transform", transform);
     m_program->SetUniform("modelTransform", modelTransform);
-    
     m_model->Draw();
+
 }
 
 void Context::ProcessInput(GLFWwindow* window) {
