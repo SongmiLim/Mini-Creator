@@ -12,6 +12,10 @@ ContextUPtr Context::Create() {
 bool Context::Init() {
     m_box = Mesh::CreateBox();
 
+    m_model = Model::Load("./model/backpack/backpack.obj");
+    if (!m_model)
+        return false;
+
     // link vertex, fragment shader
     m_simpleProgram = Program::Create("./shader/simple.vs", "./shader/simple.fs");
     if (!m_simpleProgram)
@@ -36,9 +40,12 @@ bool Context::Init() {
     image->GetWidth(), image->GetHeight(), image->GetChannelCount());
 
     // generate and bind texture object
-    //m_texture = Texture::CreateFromImage(image.get());
-    m_material.diffuse = Texture::CreateFromImage(Image::Load("./image/container2.png").get());
-	m_material.specular = Texture::CreateFromImage(Image::Load("./image/container2_specular.png").get());
+    // m_texture = Texture::CreateFromImage(image.get());
+    // m_material.diffuse = Texture::CreateFromImage(Image::Load("./image/container2.png").get());
+	// m_material.specular = Texture::CreateFromImage(Image::Load("./image/container2_specular.png").get());
+    
+    m_material.diffuse = Texture::CreateFromImage(Image::CreateSingleColorImage(4, 4, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)).get());
+    m_material.specular = Texture::CreateFromImage(Image::CreateSingleColorImage(4, 4, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f)).get());
     
     return true;
 }
@@ -122,6 +129,7 @@ void Context::Render() {
     m_program->SetUniform("light.ambient", m_light.ambient);
     m_program->SetUniform("light.diffuse", m_light.diffuse);
     m_program->SetUniform("light.specular", m_light.specular);
+    
     m_program->SetUniform("material.diffuse", 0);
     m_program->SetUniform("material.specular", 1);
     m_program->SetUniform("material.shininess", m_material.shininess);
@@ -131,17 +139,13 @@ void Context::Render() {
     glActiveTexture(GL_TEXTURE1);
     m_material.specular->Bind();
 
-    for (size_t i = 0; i < cubePositions.size(); i++) {
-        auto& pos = cubePositions[i];
-        auto model = glm::translate(glm::mat4(1.0f), pos);
-        model = glm::rotate(model, glm::radians((m_animation ? (float)glfwGetTime() : 0.0f )* 120.0f + 20.0f * (float)i), glm::vec3(1.0f, 0.5f, 0.0f));
-        auto transform = projection * view * model;
-
-        m_program->SetUniform("transform", transform);
-        m_program->SetUniform("modelTransform", model);
-
-        m_box->Draw();
-    }
+    auto modelTransform = glm::mat4(1.0f);
+    auto transform = projection * view * modelTransform;
+    
+    m_program->SetUniform("transform", transform);
+    m_program->SetUniform("modelTransform", modelTransform);
+    
+    m_model->Draw();
 }
 
 void Context::ProcessInput(GLFWwindow* window) {
@@ -190,7 +194,7 @@ void Context::MouseMove(double x, double y) {
     if (m_cameraPitch > 89.0f)  m_cameraPitch = 89.0f;
     if (m_cameraPitch < -89.0f) m_cameraPitch = -89.0f;
 
-     m_prevMousePos = pos;    
+    m_prevMousePos = pos;    
 }
 
 void Context::MouseButton(int button, int action, double x, double y) {
