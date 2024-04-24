@@ -88,14 +88,21 @@ bool Context::Init() {
 
     // generate and bind texture object
     //m_texture = Texture::CreateFromImage(image.get());
-    m_material.diffuse = Texture::CreateFromImage(Image::Load("./image/container2.png").get());
+    m_material.diffuse = Texture::CreateFromImage(Image::Load("./image/wall.jpg").get());
 	m_material.specular = Texture::CreateFromImage(Image::Load("./image/container2_specular.png").get());
     
     return true;
 }
 
 void Context::Render() {
-     if(ImGui::ColorEdit4("clear color", glm::value_ptr(m_clearColor))) {
+    ImGui::SetNextWindowSize(ImVec2(300, WINDOW_HEIGHT));
+    ImGui::SetNextWindowPos(ImVec2(WINDOW_WIDTH - 300, 0));
+
+    if (ImGui::Begin("Editor")) {
+        ImGui::Checkbox("animation", &m_animation);
+
+        if (ImGui::CollapsingHeader("camera"), ImGuiTreeNodeFlags_DefaultOpen) {
+            if(ImGui::ColorEdit4("clear color", glm::value_ptr(m_clearColor))) {
                 glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
             }
             ImGui::Separator();
@@ -111,7 +118,23 @@ void Context::Render() {
                 m_cameraPitch = 0.0f;
                 m_cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
                 m_cameraFov = 45.0f;
-           }
+            }
+            ImGui::Separator();
+        }
+
+        if (ImGui::CollapsingHeader("light", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::DragFloat3("l.position", glm::value_ptr(m_light.position), 0.01f);
+            ImGui::ColorEdit3("l.ambient", glm::value_ptr(m_light.ambient));
+            ImGui::ColorEdit3("l.diffuse", glm::value_ptr(m_light.diffuse));
+            ImGui::ColorEdit3("l.specular", glm::value_ptr(m_light.specular));
+        }
+        ImGui::Separator();
+        
+        if (ImGui::CollapsingHeader("material", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::DragFloat("m.shininess", &m_material.shininess, 1.0f, 1.0f, 256.0f);
+        }
+        ImGui::Separator();
+    }
     ImGui::End();
 
     std::vector<glm::vec3> cubePositions = {
@@ -176,7 +199,7 @@ void Context::ProcessInput(GLFWwindow* window) {
     // if (!m_cameraControl)
     //     return;
 
-    const float cameraSpeed = 0.001f;
+    const float cameraSpeed = 0.008f;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         m_cameraPos += cameraSpeed * m_cameraFront;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
