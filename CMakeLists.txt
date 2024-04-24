@@ -19,7 +19,8 @@ src/context.cpp src/context.h
 src/buffer.cpp src/buffer.h
 src/vertex_layout.cpp src/vertex_layout.h
 src/image.cpp src/image.h
-src/texture.cpp src/texture.h)
+src/texture.cpp src/texture.h
+src/mesh.cpp src/mesh.h)
 
 include(Dependency.cmake)
 
