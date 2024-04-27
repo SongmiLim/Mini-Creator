@@ -21,7 +21,8 @@ src/vertex_layout.cpp src/vertex_layout.h
 src/image.cpp src/image.h
 src/texture.cpp src/texture.h
 src/mesh.cpp src/mesh.h
-src/model.cpp src/model.h)
+src/model.cpp src/model.h
+)
 
 include(Dependency.cmake)
 
