@@ -45,10 +45,11 @@ ImGui: Dear ImGui v1.90.5<br>
 
 References
 ------------------------------------------------------------------------------
-OpenGL 공식 문서: https://www.khronos.org/opengl/<br> 
-Assimp 공식 문서: https://github.com/assimp/assimp<br> 
-STB 공식 문서: https://github.com/nothings/stb<br> 
-ImGui 공식 문서: https://github.com/ocornut/imgui<br> 
+https://www.khronos.org/opengl<br>
+https://learnopengl.com<br>
+https://github.com/assimp/assimp<br> 
+https://github.com/nothings/stb<br> 
+https://github.com/ocornut/imgui<br> 
 <br>
 <br>
 
