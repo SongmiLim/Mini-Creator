@@ -43,7 +43,7 @@ set(DEP_LIBS ${DEP_LIBS} glfw3)
 ExternalProject_Add(
     dep_glad
     GIT_REPOSITORY "https://github.com/Dav1dde/glad"
-    GIT_TAG "v2.x.x"
+    GIT_TAG "v0.1.36"
     GIT_SHALLOW 1
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
@@ -76,7 +76,7 @@ set(DEP_LIST ${DEP_LIST} dep_stb)
 ExternalProject_Add(
   dep_glm
   GIT_REPOSITORY "https://github.com/g-truc/glm"
-  GIT_TAG "1.0.x"
+  GIT_TAG "1.0.0"
   GIT_SHALLOW 1
   UPDATE_COMMAND ""
   PATCH_COMMAND ""
@@ -108,7 +108,7 @@ set(DEP_LIBS ${DEP_LIBS} imgui)
 ExternalProject_Add(
   dep_assimp
   GIT_REPOSITORY "https://github.com/assimp/assimp"
-  GIT_TAG "v5.4.0"
+  GIT_TAG "v5.0.1"
   GIT_SHALLOW 1
   UPDATE_COMMAND ""
   PATCH_COMMAND ""
