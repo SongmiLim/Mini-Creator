@@ -9,6 +9,7 @@
 #include "texture.h"
 #include "mesh.h"
 #include "model.h"
+#include "framebuffer.h"
 
 CLASS_PTR(Context)
 class Context {
@@ -26,11 +27,17 @@ private:
     bool Init();
     ProgramUPtr m_program;
     ProgramUPtr m_simpleProgram;
+    ProgramUPtr m_textureProgram;
 
     MeshUPtr m_box;
+    MeshUPtr m_plane;
+
     ModelUPtr m_model;
 
     TextureUPtr m_texture;
+
+    // framebuffer
+    FramebufferUPtr m_framebuffer;
 
     //camera parameter
     glm::vec3 m_cameraPos { glm::vec3(0.0f, 0.0f, 10.0f) };
