@@ -43,7 +43,7 @@ set(DEP_LIBS ${DEP_LIBS} glfw3)
 ExternalProject_Add(
     dep_glad
     GIT_REPOSITORY "https://github.com/Dav1dde/glad"
-    GIT_TAG "v2.x.x"
+    GIT_TAG "v0.1.36"
     GIT_SHALLOW 1
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
@@ -76,7 +76,7 @@ set(DEP_LIST ${DEP_LIST} dep_stb)
 ExternalProject_Add(
   dep_glm
   GIT_REPOSITORY "https://github.com/g-truc/glm"
-  GIT_TAG "1.0.x"
+  GIT_TAG "1.0.0"
   GIT_SHALLOW 1
   UPDATE_COMMAND ""
   PATCH_COMMAND ""
@@ -103,3 +103,26 @@ add_dependencies(imgui ${DEP_LIST})
 set(DEP_INCLUDE_DIR ${DEP_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
 set(DEP_LIST ${DEP_LIST} imgui)
 set(DEP_LIBS ${DEP_LIBS} imgui)
+
+# Add dependency: assimp
+ExternalProject_Add(
+  dep_assimp
+  GIT_REPOSITORY "https://github.com/assimp/assimp"
+  GIT_TAG "v5.0.1"
+  GIT_SHALLOW 1
+  UPDATE_COMMAND ""
+  PATCH_COMMAND ""
+  CMAKE_ARGS
+      -DCMAKE_INSTALL_PREFIX=${DEP_INSTALL_DIR}
+      -DBUILD_SHARED_LIBS=OFF
+      -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
+      -DASSIMP_BUILD_TESTS=OFF
+      -DASSIMP_INJECT_DEBUG_POSTFIX=OFF
+      -DASSIMP_BUILD_ZLIB=ON
+  TEST_COMMAND ""
+  )
+set(DEP_LIST ${DEP_LIST} dep_assimp)
+set(DEP_LIBS ${DEP_LIBS}
+  assimp-vc143-mt$<$<CONFIG:Debug>:d>
+  zlibstatic$<$<CONFIG:Debug>:d>
+  IrrXML$<$<CONFIG:Debug>:d>)
