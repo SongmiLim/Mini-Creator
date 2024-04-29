@@ -33,8 +33,9 @@ private:
     MeshUPtr m_plane;
 
     ModelUPtr m_model;
-
+    
     TextureUPtr m_texture;
+    float m_gamma {1.0f};
 
     // framebuffer
     FramebufferUPtr m_framebuffer;

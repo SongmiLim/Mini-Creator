@@ -29,7 +29,7 @@ bool Context::Init() {
         return false;
     SPDLOG_INFO("program id: {}", m_program->Get());
     
-    m_textureProgram = Program::Create("./shader/texture.vs", "./shader/texture.fs");
+    m_textureProgram = Program::Create("./shader/texture.vs", "./shader/gamma.fs");
     if (!m_textureProgram)
         return false;
 
@@ -44,6 +44,9 @@ void Context::Render() {
 
     if (ImGui::Begin("Editor")) {
         ImGui::Checkbox("animation", &m_animation);
+        ImGui::Separator();  
+
+        ImGui::DragFloat("gamma", &m_gamma, 0.01f, 0.0f, 2.0f); 
         ImGui::Separator();  
         
         if(ImGui::ColorEdit4("clear color", glm::value_ptr(m_clearColor))) {
@@ -128,8 +131,8 @@ void Context::Render() {
 
     m_textureProgram->Use();
     
-    m_textureProgram->SetUniform("transform", glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 1.0f)));
-
+    m_textureProgram->SetUniform("transform", glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f)));
+    m_textureProgram->SetUniform("gamma", m_gamma);
     m_framebuffer->GetColorAttachment()->Bind();
     m_textureProgram->SetUniform("tex", 0);
     
