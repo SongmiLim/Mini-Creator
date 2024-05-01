@@ -3,10 +3,10 @@
 #include <imgui.h>
 
 ContextUPtr Context::Create() {
-  auto context = ContextUPtr(new Context());
-  if (!context->Init())
-    return nullptr;
-  return std::move(context);
+    auto context = ContextUPtr(new Context());
+    if (!context->Init())
+        return nullptr;
+    return std::move(context);
 }
 
 bool Context::Init() {
@@ -33,7 +33,7 @@ bool Context::Init() {
     if (!m_textureProgram)
         return false;
 
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
     
     return true;
 }
@@ -191,15 +191,15 @@ void Context::MouseMove(double x, double y) {
 }
 
 void Context::MouseButton(int button, int action, double x, double y) {
-  if (button == GLFW_MOUSE_BUTTON_RIGHT) {
-    if (action == GLFW_PRESS) {
-      m_prevMousePos = glm::vec2((float)x, (float)y);
-      m_cameraControl = true;
+    if (button == GLFW_MOUSE_BUTTON_RIGHT) {
+        if (action == GLFW_PRESS) {
+            m_prevMousePos = glm::vec2((float)x, (float)y);
+            m_cameraControl = true;
+        }
+        else if (action == GLFW_RELEASE) {
+            m_cameraControl = false;
+        }
     }
-    else if (action == GLFW_RELEASE) {
-      m_cameraControl = false;
-    }
-  }
 }
 
 void Context::MouseScroll(double xoffset, double yoffset) {
