@@ -17,11 +17,11 @@ public:
     void SetUniform(const std::string& name, const glm::vec3& value) const; 
     void SetUniform(const std::string& name, const glm::vec4& value) const;
     ~Program();
+    
 private:
     Program() {}
-    bool Link(
-        const std::vector<ShaderPtr>& shaders);
-        uint32_t m_program { 0 };
+    bool Link(const std::vector<ShaderPtr>& shaders);
+    uint32_t m_program { 0 };
 };
 
 #endif // __PROGRAM_H__

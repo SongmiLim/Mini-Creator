@@ -1,14 +1,13 @@
 #include "program.h"
 
 Program::~Program() {
-  if (m_program) {
-    glDeleteProgram(m_program);
-  }
+    if (m_program) {
+      glDeleteProgram(m_program);
+    }
 }
 
 ProgramUPtr Program::Create(const std::vector<ShaderPtr> &shaders) {
     auto program = ProgramUPtr(new Program());
-
     if (!program->Link(shaders))
         return nullptr;
 
@@ -51,8 +50,8 @@ void Program::Use() const{
 }
 
 void Program::SetUniform(const std::string& name, int value) const {
-  auto loc = glGetUniformLocation(m_program, name.c_str());
-  glUniform1i(loc, value);
+    auto loc = glGetUniformLocation(m_program, name.c_str());
+    glUniform1i(loc, value);
 }
 
 void Program::SetUniform(const std::string& name, float value) const {
@@ -71,6 +70,6 @@ void Program::SetUniform(const std::string& name, const glm::vec3& value) const 
 }
 
 void Program::SetUniform(const std::string& name, const glm::vec4& value) const {
-  auto loc = glGetUniformLocation(m_program, name.c_str());
-  glUniform4fv(loc, 1, glm::value_ptr(value));
+    auto loc = glGetUniformLocation(m_program, name.c_str());
+    glUniform4fv(loc, 1, glm::value_ptr(value));
 }

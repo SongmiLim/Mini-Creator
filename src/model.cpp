@@ -4,6 +4,7 @@ ModelUPtr Model::Load(const std::string& filename) {
     auto model = ModelUPtr(new Model());
     if (!model->LoadByAssimp(filename))
         return nullptr;
+        
     return std::move(model);
 }
 
