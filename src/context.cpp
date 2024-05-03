@@ -14,7 +14,7 @@ bool Context::Init() {
 
     m_plane = Mesh::CreatePlane();
 
-    m_model = Model::Load("./model/backpack/backpack.obj");
+    m_model = Model::Load("./model/vanellope/vanellope.obj");
     if (!m_model)
         return false;
 
@@ -49,10 +49,15 @@ void Context::Render() {
         ImGui::DragFloat("gamma", &m_gamma, 0.01f, 0.0f, 2.0f); 
         ImGui::Separator();  
         
-        if(ImGui::ColorEdit4("clear color", glm::value_ptr(m_clearColor))) {
+        if(ImGui::ColorEdit4("window color", glm::value_ptr(m_clearColor))) {
             glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
         }
         ImGui::Separator();  
+
+        if (ImGui::CollapsingHeader("transform", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::DragFloat3("location", glm::value_ptr(m_location), 0.01f);
+            ImGui::DragFloat3("scale", glm::value_ptr(m_scale), 0.01f, 0.0f, 10.0f);
+        }
 
         if (ImGui::CollapsingHeader("camera", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::DragFloat3("camera pos", glm::value_ptr(m_cameraPos), 0.01f);
@@ -119,8 +124,11 @@ void Context::Render() {
     m_program->SetUniform("light.specular", m_light.specular);
 
     auto modelTransform = glm::mat4(1.0f);
+    modelTransform = glm::translate(glm::mat4(1.0), m_location);
+    modelTransform = glm::scale(modelTransform, m_scale);
     modelTransform = glm::rotate(modelTransform, glm::radians((m_animation ? (float)glfwGetTime() : 0.0f )* 120.0f + 20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     auto transform = projection * view * modelTransform;
+
     m_program->SetUniform("transform", transform);
     m_program->SetUniform("modelTransform", modelTransform);
     m_model->Draw(m_program.get());

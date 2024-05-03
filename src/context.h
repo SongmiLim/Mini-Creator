@@ -67,6 +67,9 @@ private:
     glm::vec3 specular { glm::vec3(1.0f, 1.0f, 1.0f) };
     };
     Light m_light;
+
+    glm::vec3 m_location { glm::vec3(1.0f, 1.0f, 1.0f) };
+    glm::vec3 m_scale { glm::vec3(1.0f, 1.0f, 1.0f) };
 };
 
 #endif // __CONTEXT_H__
