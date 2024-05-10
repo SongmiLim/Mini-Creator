@@ -15,7 +15,9 @@ Features
 Transform: 로드된 3D 모델의 위치와 크기를 조절할 수 있습니다.<br> 
 Animation: 360도 회전하는 애니메이션을 적용하여 3D 모델을 모든 각도에서 확인할 수 있습니다.<br> 
 Camera 조작: 키보드 및 마우스를 사용하여 사용자는 camera의 position, fov, yaw, pitch를 조절할 수 있습니다.<br> 
-Light 설정: 사용자는 light의 position, ambient, diffuse, specular를 조절하여 장면의 조명을 변경할 수 있습니다.
+Light 설정: 사용자는 light의 position, ambient, diffuse, specular를 조절하여 장면의 조명을 변경할 수 있습니다.<br><br>
+***** 더 자세한 기능 설명은 
+[Feature](https://github.com/SongmiLim/Mini-Creator/wiki/Feature) 를 참고해주세요 *****
 <br>
 <br>
 ![GIFMaker_me](https://github.com/SongmiLim/Mini-Creator/assets/99317323/b17fbe43-3add-4ac3-aa36-3de0a4839a55)
