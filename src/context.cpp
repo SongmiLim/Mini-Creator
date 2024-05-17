@@ -10,7 +10,7 @@ ContextUPtr Context::Create() {
 }
 
 bool Context::Init() {
-    m_box = Mesh::CreateBox();
+    m_box = Mesh::CreateSphere();
 
     m_plane = Mesh::CreatePlane();
 
