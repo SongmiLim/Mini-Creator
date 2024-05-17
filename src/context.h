@@ -67,6 +67,7 @@ private:
     glm::vec3 specular { glm::vec3(1.0f, 1.0f, 1.0f) };
     };
     Light m_light;
+    bool m_blinn { false };
 
     glm::vec3 m_location { glm::vec3(0.0f, 0.0f, 0.0f) };
     glm::vec3 m_scale { glm::vec3(1.0f, 1.0f, 1.0f) };
