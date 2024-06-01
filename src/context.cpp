@@ -10,11 +10,11 @@ ContextUPtr Context::Create() {
 }
 
 bool Context::Init() {
-    m_box = Mesh::CreateBox();
+    m_box = Mesh::CreateSphere();
 
     m_plane = Mesh::CreatePlane();
 
-    m_model = Model::Load("./model/vanellope/vanellope.obj");
+    m_model = Model::Load("./model/backpack/backpack.obj");
     if (!m_model)
         return false;
 
@@ -79,6 +79,7 @@ void Context::Render() {
             ImGui::ColorEdit3("l.ambient", glm::value_ptr(m_light.ambient));
             ImGui::ColorEdit3("l.diffuse", glm::value_ptr(m_light.diffuse));
             ImGui::ColorEdit3("l.specular", glm::value_ptr(m_light.specular));
+            ImGui::Checkbox("l.blinn", &m_blinn);
         }
         ImGui::Separator();
     }
@@ -122,6 +123,7 @@ void Context::Render() {
     m_program->SetUniform("light.ambient", m_light.ambient);
     m_program->SetUniform("light.diffuse", m_light.diffuse);
     m_program->SetUniform("light.specular", m_light.specular);
+    m_program->SetUniform("blinn", (m_blinn ? 1 : 0));
 
     auto modelTransform = glm::mat4(1.0f);
     modelTransform = glm::translate(glm::mat4(1.0), m_location);
