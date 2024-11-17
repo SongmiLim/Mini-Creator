@@ -1,44 +1,18 @@
 cmake_minimum_required(VERSION 3.13)
 
-# Set the project name and C++ standard
-set(PROJECT_NAME mini_creator)
 set(CMAKE_CXX_STANDARD 17)
 
-set(WINDOW_NAME "Mini Creator")
-set(WINDOW_WIDTH 1280)
-set(WINDOW_HEIGHT 960)
-
-# Declare the project
+set(PROJECT_NAME mini_creator)
 project(${PROJECT_NAME})
-add_executable(${PROJECT_NAME}  
-src/main.cpp
-src/common.cpp src/common.h
-src/shader.cpp src/shader.h
-src/program.cpp src/program.h
-src/context.cpp src/context.h
-src/buffer.cpp src/buffer.h
-src/vertex_layout.cpp src/vertex_layout.h
-src/image.cpp src/image.h
-src/texture.cpp src/texture.h
-src/mesh.cpp src/mesh.h
-src/model.cpp src/model.h
-src/framebuffer.cpp src/framebuffer.h
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdparty)
+
+include(3rdparty)
+
+qt_add_executable(${PROJECT_NAME}  
+    src/main.cpp
+    src/app.h src/app.cpp
+    src/ui/main_window.h src/ui/main_window.cpp
 )
 
-include(Dependency.cmake)
-
-# Add options for include / library directories
-target_include_directories(${PROJECT_NAME} PUBLIC ${DEP_INCLUDE_DIR})
-target_link_directories(${PROJECT_NAME} PUBLIC ${DEP_LIB_DIR})
-
-#Link the libraries
-target_link_libraries(${PROJECT_NAME} PUBLIC ${DEP_LIBS})
-
-target_compile_definitions(${PROJECT_NAME} PUBLIC
-WINDOW_NAME="${WINDOW_NAME}"
-WINDOW_WIDTH=${WINDOW_WIDTH}
-WINDOW_HEIGHT=${WINDOW_HEIGHT}
-)
-
-# Set up dependencies so that dependencies are built first
-add_dependencies(${PROJECT_NAME} ${DEP_LIST})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_LINK_LIBS})
