@@ -16,6 +16,8 @@ qt_add_executable(${PROJECT_NAME}
     src/ui/menu_bar.h src/ui/menu_bar.cpp
     src/ui/tool_bar.h src/ui/tool_bar.cpp
     src/ui/menu_bar/file_menu.h src/ui/menu_bar/file_menu.cpp
+    src/ui/widgets/main_widget.h src/ui/widgets/main_widget.cpp
+    src/ui/widgets/main_widget/render_widget.h src/ui/widgets/main_widget/render_widget.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_LINK_LIBS})

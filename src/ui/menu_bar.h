@@ -2,27 +2,27 @@
 #define MENUBAR_H
 
 #include <QMenuBar>
-#include <QAction>
+
 
 #include "menu_bar/file_menu.h"
 
-namespace mini_creator{
-namespace ui{
+namespace mini_creator {
+namespace ui {
 
 class MenuBar : public QMenuBar {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    MenuBar();
-    void Render();
-    ~MenuBar();
+  explicit MenuBar();
+  void Render();
+  ~MenuBar();
 
 private:
-    void CreateMenu();
-    menu_bar::FileMenu* file_menu_;
+  void CreateMenu();
+  menu_bar::FileMenu *file_menu_;
 };
 
-}
-}
+} // namespace ui
+} // namespace mini_creator
 
 #endif // MENUBAR_H

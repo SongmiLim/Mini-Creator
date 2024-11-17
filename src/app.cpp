@@ -1,17 +1,15 @@
 #include "app.h"
 
-namespace mini_creator{
+namespace mini_creator {
 
 App::App(int &argc, char **argv) : app_(argc, argv), main_window_(nullptr) {}
 
 int App::Run() {
-    main_window_ = new ui::MainWindow();
-    main_window_->Render();
+  main_window_ = new ui::MainWindow();
+  main_window_->Render();
 
-    return app_.exec();
+  return app_.exec();
 }
 
-App::~App() {
-    delete main_window_;
-}
-}
+App::~App() { delete main_window_; }
+} // namespace mini_creator

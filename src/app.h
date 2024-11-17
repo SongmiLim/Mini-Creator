@@ -5,21 +5,21 @@
 
 #include "ui/main_window.h"
 
-namespace mini_creator{
+namespace mini_creator {
 
 class App {
 public:
-    App(int &argc, char **argv);
+  App(int &argc, char **argv);
 
-    int Run();
+  int Run();
 
-    ~App();
+  ~App();
 
 private:
-    QApplication app_;
-    ui::MainWindow *main_window_;
+  QApplication app_;
+  ui::MainWindow *main_window_;
 };
 
-}
+} // namespace mini_creator
 
 #endif // APP_H
