@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "menu_bar.h"
+#include "tool_bar.h"
 
 namespace mini_creator{
 namespace ui{
@@ -18,6 +19,7 @@ public:
 
 private:
     MenuBar *menu_bar_;
+    ToolBar *tool_bar_;
 };
 
 }

@@ -14,6 +14,7 @@ qt_add_executable(${PROJECT_NAME}
     src/app.h src/app.cpp
     src/ui/main_window.h src/ui/main_window.cpp
     src/ui/menu_bar.h src/ui/menu_bar.cpp
+    src/ui/tool_bar.h src/ui/tool_bar.cpp
     src/ui/menu_bar/file_menu.h src/ui/menu_bar/file_menu.cpp
 )
 

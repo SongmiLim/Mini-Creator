@@ -10,6 +10,9 @@ MainWindow::MainWindow() {
 
     menu_bar_ = new MenuBar();
     QMainWindow::setMenuBar(menu_bar_);
+
+    tool_bar_ = new ToolBar();
+    QMainWindow::addToolBar(tool_bar_);
 }
 
 void MainWindow::Render() {
