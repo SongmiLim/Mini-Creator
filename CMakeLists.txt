@@ -13,6 +13,8 @@ qt_add_executable(${PROJECT_NAME}
     src/main.cpp
     src/app.h src/app.cpp
     src/ui/main_window.h src/ui/main_window.cpp
+    src/ui/menu_bar.h src/ui/menu_bar.cpp
+    src/ui/menu_bar/file_menu.h src/ui/menu_bar/file_menu.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_LINK_LIBS})

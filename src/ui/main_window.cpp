@@ -4,13 +4,16 @@ namespace mini_creator{
 namespace ui{
 
 MainWindow::MainWindow() {
-    setWindowTitle("Mini Creator");
-    setMinimumSize(1600, 900);
-    showMaximized();
+    QMainWindow::setWindowTitle("Mini Creator");
+    QMainWindow::setMinimumSize(800, 600);
+    QMainWindow::showMaximized();
+
+    menu_bar_ = new MenuBar();
+    QMainWindow::setMenuBar(menu_bar_);
 }
 
 void MainWindow::Render() {
-    show();
+    QMainWindow::show();
 }
 
 }

@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "menu_bar.h"
+
 namespace mini_creator{
 namespace ui{
 
@@ -13,6 +15,9 @@ public:
     MainWindow();
 
     void Render();
+
+private:
+    MenuBar *menu_bar_;
 };
 
 }
