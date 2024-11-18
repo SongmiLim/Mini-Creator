@@ -21,9 +21,11 @@ MainWindow::MainWindow() {
   QMainWindow::setCentralWidget(central_widget);
 
   main_widget_ = new widgets::MainWidget(this);
+  object_control_widget_ = new widgets::ObjectControlWidget(this);
 
   QHBoxLayout *main_layout = new QHBoxLayout;
   main_layout->addWidget(main_widget_, 4);
+  main_layout->addWidget(object_control_widget_, 1);
 
   central_widget->setLayout(main_layout);
 }
