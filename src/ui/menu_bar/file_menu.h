@@ -14,11 +14,11 @@ public:
   explicit FileMenu();
 
 private slots:
-  void HandleNew();
-  void HandleImport();
+  void OnNewTriggered();
+  void OnImportTriggered();
 
 private:
-  void InitializeActions();
+  void SetupActions();
   void AddActionsToMenu();
 
   QAction *new_action_;

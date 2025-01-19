@@ -10,10 +10,9 @@ namespace mini_creator {
 class App {
 public:
   App(int &argc, char **argv);
-
-  int Run();
-
   ~App();
+
+  int Execute();
 
 private:
   QApplication app_;

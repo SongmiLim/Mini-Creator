@@ -5,8 +5,9 @@
 
 #include "menu_bar.h"
 #include "tool_bar.h"
-#include "widgets/main_widget.h"
+
 #include "widgets/object_control_widget.h"
+#include "widgets/render_widget.h"
 
 namespace mini_creator {
 namespace ui {
@@ -16,17 +17,21 @@ class MainWindow : public QMainWindow {
 
 public:
   explicit MainWindow();
-
-  void Render();
-
   ~MainWindow() = default;
 
+  void Show();
+
 private:
+  void InitializeUI();
+  void SetupMenuBar();
+  void SetupToolBar();
+  void SetupCentralWidget();
+
   MenuBar *menu_bar_;
   ToolBar *tool_bar_;
 
-  widgets::MainWidget *main_widget_;
   widgets::ObjectControlWidget *object_control_widget_;
+  widgets::RenderWidget *render_widget_;
 };
 
 } // namespace ui

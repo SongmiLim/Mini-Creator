@@ -3,7 +3,6 @@
 
 #include <QMenuBar>
 
-
 #include "menu_bar/file_menu.h"
 
 namespace mini_creator {
@@ -14,8 +13,9 @@ class MenuBar : public QMenuBar {
 
 public:
   explicit MenuBar();
+  ~MenuBar() = default;
+  
   void Render();
-  ~MenuBar();
 
 private:
   void CreateMenu();

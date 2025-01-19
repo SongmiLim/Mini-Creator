@@ -8,7 +8,5 @@ MenuBar::MenuBar() : QMenuBar() {
   QMenuBar::addMenu(file_menu_);
 }
 
-MenuBar::~MenuBar() {}
-
 } // namespace ui
 } // namespace mini_creator

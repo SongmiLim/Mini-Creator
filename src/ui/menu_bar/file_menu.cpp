@@ -4,27 +4,27 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-
+#include "../../commands/command_import.h"
 namespace mini_creator {
 namespace ui {
 namespace menu_bar {
 
 FileMenu::FileMenu() : QMenu("&File") {
-  InitializeActions();
+  SetupActions();
   AddActionsToMenu();
 }
 
-void FileMenu::InitializeActions() {
+void FileMenu::SetupActions() {
   new_action_ = new QAction(
-      QIcon::fromTheme(QIcon::ThemeIcon::DocumentNew).pixmap(QSize(16, 16)),
+      QIcon::fromTheme("document-new").pixmap(QSize(16, 16)),
       "&New", this);
   import_action_ = new QAction(
-      QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen).pixmap(QSize(16, 16)),
+      QIcon::fromTheme("document-open").pixmap(QSize(16, 16)),
       "&Import", this);
 
-  QMenu::connect(new_action_, &QAction::triggered, this, &FileMenu::HandleNew);
+  QMenu::connect(new_action_, &QAction::triggered, this, &FileMenu::OnNewTriggered);
   QMenu::connect(import_action_, &QAction::triggered, this,
-                 &FileMenu::HandleImport);
+                 &FileMenu::OnImportTriggered);
 }
 
 void FileMenu::AddActionsToMenu() {
@@ -32,15 +32,16 @@ void FileMenu::AddActionsToMenu() {
   QMenu::addAction(import_action_);
 }
 
-void FileMenu::HandleNew() {}
+void FileMenu::OnNewTriggered() {}
 
-void FileMenu::HandleImport() {
-  QString fileName =
-      QFileDialog::getOpenFileName(this, "file explore", "", "*.obj, *fbx");
+void FileMenu::OnImportTriggered() {
+  commands::CommandImport::ImportTestCubeModel();
+  // QString fileName =
+  //     QFileDialog::getOpenFileName(this, "file explore", "", "*.obj, *fbx");
 
-  if (!fileName.isEmpty()) {
-    QMessageBox::information(this, "open", "selected file: " + fileName);
-  }
+  // if (!fileName.isEmpty()) {
+  //   QMessageBox::information(this, "open", "selected file: " + fileName);
+  // }
 }
 
 } // namespace menu_bar
