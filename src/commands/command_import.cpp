@@ -24,18 +24,19 @@ void CommandImport::Execute(const QString &file_path) {
 
   qDebug() << "Successfully loaded model:" << file_path;
 
-  std::shared_ptr<model::Model> model =
-      std::make_shared<model::Model>(file_path);
+  std::shared_ptr<components::Model> model =
+      std::make_shared<components::Model>(file_path);
   ProcessNode(scene->mRootNode, scene, model);
   core::ModelManager::Instance().AddModel(model);
 }
 
-void CommandImport::ProcessNode(aiNode *node, const aiScene *scene,
-                                std::shared_ptr<model::Model> &model) {
+void CommandImport::ProcessNode(
+    aiNode *node, const aiScene *scene,
+    std::shared_ptr<components::Model> &model) {
   for (unsigned int i = 0; i < node->mNumMeshes; i++) {
     auto meshIndex = node->mMeshes[i];
     auto mesh = scene->mMeshes[meshIndex];
-    std::shared_ptr<model::Mesh> newMesh = ProcessMesh(mesh, scene);
+    std::shared_ptr<components::Mesh> newMesh = ProcessMesh(mesh, scene);
     model->AddMesh(newMesh);
   }
 
@@ -44,9 +45,10 @@ void CommandImport::ProcessNode(aiNode *node, const aiScene *scene,
   }
 }
 
-std::shared_ptr<model::Mesh> CommandImport::ProcessMesh(aiMesh *mesh,
-                                                        const aiScene *scene) {
-  std::shared_ptr<model::Mesh> newMesh = std::make_shared<model::Mesh>();
+std::shared_ptr<components::Mesh>
+CommandImport::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
+  std::shared_ptr<components::Mesh> newMesh =
+      std::make_shared<components::Mesh>();
 
   std::vector<glm::vec3> vertices(mesh->mNumVertices);
   std::vector<glm::vec3> normals(mesh->mNumVertices);
@@ -98,9 +100,9 @@ void CommandImport::ImportTestCubeModel() {
                                        0, 4, 7, 7, 3, 0, 1, 5, 6, 6, 2, 1,
                                        0, 1, 5, 5, 4, 0, 3, 2, 6, 6, 7, 3};
 
-  std::shared_ptr<model::Model> model =
-      std::make_shared<model::Model>("TestCube");
-  std::shared_ptr<model::Mesh> mesh = std::make_shared<model::Mesh>();
+  std::shared_ptr<components::Model> model =
+      std::make_shared<components::Model>("TestCube");
+  std::shared_ptr<components::Mesh> mesh = std::make_shared<components::Mesh>();
   mesh->SetVertices(cubeVertices);
   mesh->SetIndices(cubeIndices);
   model->AddMesh(mesh);

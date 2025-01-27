@@ -7,6 +7,8 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLWidget>
 
+#include "../../components/camera.h"
+
 namespace mini_creator {
 namespace ui {
 namespace widgets {
@@ -17,6 +19,7 @@ class RenderWidget : public QOpenGLWidget, protected QOpenGLFunctions {
 public:
   explicit RenderWidget(QWidget *parent = nullptr);
   ~RenderWidget() = default;
+  void AdjustCameraToModel();
 
 protected:
   void initializeGL() override;
@@ -27,10 +30,11 @@ private:
   void SetupShaders();
 
   QOpenGLShaderProgram *shader_program_;
+  std::shared_ptr<components::Camera> camera_;
 
   QMatrix4x4 projection_matrix_;
-  QMatrix4x4 view_matrix_;
-  QMatrix4x4 model_matrix_;
+  // QMatrix4x4 view_matrix_;
+  // QMatrix4x4 model_matrix_;
 };
 
 } // namespace widgets

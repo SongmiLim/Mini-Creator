@@ -8,8 +8,9 @@
 #include <assimp/scene.h>
 #include <glm/glm.hpp>
 
-#include "../model/model.h"
-#include "../model/mesh.h"
+#include "../components/mesh.h"
+#include "../components/model.h"
+
 
 namespace mini_creator {
 namespace commands {
@@ -21,8 +22,10 @@ public:
   static void ImportTestCubeModel();
 
 private:
-  static void ProcessNode(aiNode* node, const aiScene* scene, std::shared_ptr<model::Model>& model);
-  static std::shared_ptr<model::Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene);
+  static void ProcessNode(aiNode *node, const aiScene *scene,
+                          std::shared_ptr<components::Model> &model);
+  static std::shared_ptr<components::Mesh> ProcessMesh(aiMesh *mesh,
+                                                       const aiScene *scene);
 };
 
 } // namespace commands

@@ -3,17 +3,10 @@
 #include <qdebug.h>
 
 namespace mini_creator {
-namespace model {
+namespace components {
 
 Mesh::Mesh() : ebo_(QOpenGLBuffer::IndexBuffer) {
   QOpenGLFunctions::initializeOpenGLFunctions();
-
-  // vbo_vertices_ = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
-  // vbo_normals_ = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
-  // vbo_texCoords_ = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
-  // ebo_ = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
-
-  // vertex_count_ = 0;
   index_count_ = 0;
 }
 
@@ -25,6 +18,7 @@ Mesh::~Mesh() {
 }
 
 void Mesh::SetVertices(const std::vector<glm::vec3> &vertices) {
+  vertices_ = vertices;
   if (vertices.empty()) {
     qDebug() << "Mesh::SetVertices - Empty vertex data.";
     return;
@@ -116,7 +110,7 @@ void Mesh::Draw(QOpenGLShaderProgram *shader_program) {
   // } else {
   //   // qDebug() << "Mesh::Draw - Texture coordinate attribute not found.";
   // }
-  
+
   if (ebo_.isCreated()) {
     ebo_.bind();
     glDrawElements(GL_TRIANGLES, index_count_, GL_UNSIGNED_INT, nullptr);
@@ -128,9 +122,8 @@ void Mesh::Draw(QOpenGLShaderProgram *shader_program) {
     // shader_program->release();
   } else {
     // glDrawArray(GL_TRIANGLES, index_count_, GL_UNSIGNED_INT, nullptr);
-
   }
 }
 
-} // namespace model
+} // namespace components
 } // namespace mini_creator

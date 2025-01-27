@@ -11,7 +11,7 @@
 #include <memory>
 
 namespace mini_creator {
-namespace model {
+namespace components {
 
 class Model : protected QOpenGLFunctions {
 public:
@@ -19,20 +19,27 @@ public:
   ~Model();
 
   void AddMesh(std::shared_ptr<Mesh> mesh);
-  void SetPosition(const glm::vec3 &position);
+
+  void SetTranslation(const glm::vec3 &translation);
   void SetRotation(const glm::vec3 &rotation);
   void SetScale(const glm::vec3 &scale);
+  const glm::vec3 &GetMinBound() { return minBound_; }
+  const glm::vec3 &GetMaxBound() { return maxBound_; }
+  const std::vector<std::shared_ptr<Mesh>> &GetMeshes() { return meshes_; }
+  const QString &GetName() { return name_; }
+
   void Draw(QOpenGLShaderProgram *shader_program);
-  const QString& GetName() const { return name_; }
+
 private:
   QString name_;
   std::vector<std::shared_ptr<Mesh>> meshes_;
-  glm::vec3 position_;
+  glm::vec3 translation_;
   glm::vec3 rotation_;
   glm::vec3 scale_;
+  glm::vec3 minBound_, maxBound_;
 };
 
-} // namespace model
+} // namespace components
 } // namespace mini_creator
 
 #endif // MODEL_H
