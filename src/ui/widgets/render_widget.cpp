@@ -2,9 +2,10 @@
 
 #include "../../core/model_manager.h"
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <Qtimer>
-#include <QCoreApplication>
+
 
 namespace mini_creator {
 namespace ui {
@@ -14,10 +15,10 @@ RenderWidget::RenderWidget(QWidget *parent)
     : QOpenGLWidget(parent), shader_program_(nullptr) {
   camera_ = std::make_shared<components::Camera>();
 
-  // QTimer *timer = new QTimer(this);
-  // connect(timer, &QTimer::timeout, this,
-  //         QOverload<>::of(&QOpenGLWidget::update));
-  // timer->start(16);
+  QTimer *timer = new QTimer(this);
+  connect(timer, &QTimer::timeout, this,
+          QOverload<>::of(&QOpenGLWidget::update));
+  timer->start(16);
 }
 
 void RenderWidget::initializeGL() {
@@ -30,6 +31,7 @@ void RenderWidget::initializeGL() {
 void RenderWidget::resizeGL(int width, int height) {
   glViewport(0, 0, width, height);
 
+  camera_->SetAspectRatio(width, height);
   camera_->SetPerspective(45.0f, float(width) / height, 0.1f, 1000.0f);
   shader_program_->setUniformValue("projection",
                                    camera_->GetProjectionMatrix());
@@ -43,13 +45,13 @@ void RenderWidget::AdjustCameraToModel() {
 
   glm::vec3 minBound(FLT_MAX), maxBound(-FLT_MAX);
 
-  for (const auto& model : models) {
-      for (const auto& mesh : model->GetMeshes()) {
-          for (const auto& vertex : mesh->GetVertices()) {
-              minBound = glm::min(minBound, vertex);
-              maxBound = glm::max(maxBound, vertex);
-          }
+  for (const auto &model : models) {
+    for (const auto &mesh : model->GetMeshes()) {
+      for (const auto &vertex : mesh->GetVertices()) {
+        minBound = glm::min(minBound, vertex);
+        maxBound = glm::max(maxBound, vertex);
       }
+    }
   }
 
   camera_->FitToBoundingBox(minBound, maxBound);
@@ -76,15 +78,16 @@ void RenderWidget::paintGL() {
 void RenderWidget::SetupShaders() {
   shader_program_ = new QOpenGLShaderProgram();
   if (!shader_program_->addShaderFromSourceFile(
-          QOpenGLShader::Vertex,
-          QCoreApplication::applicationDirPath() + "/../../src/graphics/shader/mesh.vs")) {
-    qDebug()<<QCoreApplication::applicationDirPath() + "/../../src/graphics/shader/mesh.vs";
+          QOpenGLShader::Vertex, QCoreApplication::applicationDirPath() +
+                                     "/../../src/graphics/shader/mesh.vs")) {
+    qDebug() << QCoreApplication::applicationDirPath() +
+                    "/../../src/graphics/shader/mesh.vs";
     qDebug() << "Vertex Shader Error:" << shader_program_->log();
   }
 
   if (!shader_program_->addShaderFromSourceFile(
-          QOpenGLShader::Fragment,
-          QCoreApplication::applicationDirPath() + "/../../src/graphics/shader/mesh.fs")) {
+          QOpenGLShader::Fragment, QCoreApplication::applicationDirPath() +
+                                       "/../../src/graphics/shader/mesh.fs")) {
     qDebug() << "Fragment Shader Error:" << shader_program_->log();
   }
 

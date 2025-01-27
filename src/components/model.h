@@ -23,6 +23,9 @@ public:
   void SetTranslation(const glm::vec3 &translation);
   void SetRotation(const glm::vec3 &rotation);
   void SetScale(const glm::vec3 &scale);
+  const glm::vec3 &GetTranslation() const { return translation_; }
+  const glm::vec3 &GetRotation() const { return rotation_; }
+  const glm::vec3 &GetScale() const { return scale_; }
   const glm::vec3 &GetMinBound() { return minBound_; }
   const glm::vec3 &GetMaxBound() { return maxBound_; }
   const std::vector<std::shared_ptr<Mesh>> &GetMeshes() { return meshes_; }

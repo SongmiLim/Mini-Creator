@@ -18,16 +18,12 @@ void Model::AddMesh(std::shared_ptr<Mesh> mesh) {
 }
 
 void Model::SetTranslation(const glm::vec3 &translation) {
-  //translation_ = translation;
+  translation_ = translation;
 }
 
-void Model::SetRotation(const glm::vec3 &rotation) {
-  //rotation_ = rotation;
-}
+void Model::SetRotation(const glm::vec3 &rotation) { rotation_ = rotation; }
 
-void Model::SetScale(const glm::vec3 &scale) {
-  //scale_ = scale;
-}
+void Model::SetScale(const glm::vec3 &scale) { scale_ = scale; }
 
 void Model::Draw(QOpenGLShaderProgram *shader_program) {
   if (!shader_program) {
@@ -39,9 +35,11 @@ void Model::Draw(QOpenGLShaderProgram *shader_program) {
 
   QMatrix4x4 model_matrix;
   model_matrix.setToIdentity();
-  //model_matrix.translate(translation_.x, translation_.y, translation_.z);
-  //model_matrix.rotate(45.0f, QVector3D(-1.0f, 1.0f, 0.0f));
-  //model_matrix.scale(2.0f, 2.0f, 2.0f);
+  model_matrix.translate(translation_.x, translation_.y, translation_.z);
+  model_matrix.rotate(rotation_.x, QVector3D(1.0f, 0.0f, 0.0f));
+  model_matrix.rotate(rotation_.y, QVector3D(0.0f, 1.0f, 0.0f));
+  model_matrix.rotate(rotation_.z, QVector3D(0.0f, 0.0f, 1.0f));
+  model_matrix.scale(scale_.x, scale_.y, scale_.z);
 
   shader_program->setUniformValue("model", model_matrix);
 
@@ -56,5 +54,5 @@ void Model::Draw(QOpenGLShaderProgram *shader_program) {
   // qDebug() << "Model drawn:" << name_;
 }
 
-} // namespace model
+} // namespace components
 } // namespace mini_creator

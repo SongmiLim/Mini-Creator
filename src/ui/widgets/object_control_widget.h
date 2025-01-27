@@ -10,7 +10,6 @@
 #include <QSlider>
 #include <QWidget>
 
-
 namespace mini_creator {
 namespace ui {
 namespace widgets {
@@ -41,7 +40,7 @@ private slots:
   void ResetSliders();
 
 private:
-  QSlider *CreateSlider(int min, int max, int initial_value);
+  QSlider *CreateSlider(int min, int max, int initial_value, float step);
   QLabel *CreateLabel(const QString &text);
   QGroupBox *CreateGroupBox(const QString &title,
                             const QVector<QWidget *> &widgets);

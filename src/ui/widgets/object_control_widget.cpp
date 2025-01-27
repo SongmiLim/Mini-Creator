@@ -4,6 +4,8 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
+#include "../../core//model_manager.h"
+
 namespace mini_creator {
 namespace ui {
 namespace widgets {
@@ -29,26 +31,26 @@ ObjectControlWidget::ObjectControlWidget(QWidget *parent) : QWidget(parent) {
 }
 
 QGroupBox *ObjectControlWidget::CreateTransformGroupBox() {
-  x_rotation_slider_ = CreateSlider(-180, 180, 0);
-  x_rotation_label_ = CreateLabel("X: 0");
-  y_rotation_slider_ = CreateSlider(-180, 180, 0);
-  y_rotation_label_ = CreateLabel("Y: 0");
-  z_rotation_slider_ = CreateSlider(-180, 180, 0);
-  z_rotation_label_ = CreateLabel("Z: 0");
+  x_rotation_slider_ = CreateSlider(-180, 180, 0, 1);
+  x_rotation_label_ = CreateLabel("X: 0°");
+  y_rotation_slider_ = CreateSlider(-180, 180, 0, 1);
+  y_rotation_label_ = CreateLabel("Y: 0°");
+  z_rotation_slider_ = CreateSlider(-180, 180, 0, 1);
+  z_rotation_label_ = CreateLabel("Z: 0°");
 
-  x_translation_slider_ = CreateSlider(-100, 100, 0);
-  x_translation_label_ = CreateLabel("X: 0");
-  y_translation_slider_ = CreateSlider(-100, 100, 0);
-  y_translation_label_ = CreateLabel("Y: 0");
-  z_translation_slider_ = CreateSlider(-100, 100, 0);
-  z_translation_label_ = CreateLabel("Z: 0");
+  x_translation_slider_ = CreateSlider(-10000, 10000, 0, 0.01f);
+  x_translation_label_ = CreateLabel("X: 0.00");
+  y_translation_slider_ = CreateSlider(-10000, 10000, 0, 0.01f);
+  y_translation_label_ = CreateLabel("Y: 0.00");
+  z_translation_slider_ = CreateSlider(-10000, 10000, 0, 0.01f);
+  z_translation_label_ = CreateLabel("Z: 0.00");
 
-  x_scale_slider_ = CreateSlider(-10, 10, 0);
-  x_scale_label_ = CreateLabel("X: 1.0");
-  y_scale_slider_ = CreateSlider(-10, 10, 0);
-  y_scale_label_ = CreateLabel("Y: 1.0");
-  z_scale_slider_ = CreateSlider(-10, 10, 0);
-  z_scale_label_ = CreateLabel("Z: 1.0");
+  x_scale_slider_ = CreateSlider(1, 1000, 100, 0.01f);
+  x_scale_label_ = CreateLabel("X: 1.000");
+  y_scale_slider_ = CreateSlider(1, 1000, 100, 0.01f);
+  y_scale_label_ = CreateLabel("Y: 1.000");
+  z_scale_slider_ = CreateSlider(1, 1000, 100, 0.01f);
+  z_scale_label_ = CreateLabel("Z: 1.000");
 
   QGroupBox *transform_group_box = new QGroupBox("Transform", this);
   QVBoxLayout *transform_layout = new QVBoxLayout(transform_group_box);
@@ -185,12 +187,12 @@ void ObjectControlWidget::ConnectSignals() {
                    &ObjectControlWidget::ResetSliders);
 }
 
-QSlider *ObjectControlWidget::CreateSlider(int min, int max,
-                                           int initial_value) {
+QSlider *ObjectControlWidget::CreateSlider(int min, int max, int initial_value,
+                                           float step) {
   QSlider *slider = new QSlider(Qt::Horizontal, this);
   slider->setRange(min, max);
   slider->setValue(initial_value);
-  slider->setSingleStep(1);
+  slider->setSingleStep(step);
   slider->setPageStep(10);
   return slider;
 }
@@ -215,39 +217,114 @@ ObjectControlWidget::CreateGroupBox(const QString &title,
 }
 
 void ObjectControlWidget::HandleXRotationChanged(const int value) {
-  x_rotation_label_->setText(QString("X: %1").arg(value));
+  float rotation_value = static_cast<float>(value);
+  x_rotation_label_->setText(QString("X: %1°").arg(rotation_value, 0, 'f', 1));
+
+  auto models = core::ModelManager::Instance().GetAllModels();
+  for (auto &model : models) {
+    glm::vec3 rotation = model->GetRotation();
+    rotation.x = rotation_value;
+    model->SetRotation(rotation);
+  }
 }
 
 void ObjectControlWidget::HandleYRotationChanged(const int value) {
-  y_rotation_label_->setText(QString("Y: %1").arg(value));
+  float rotation_value = static_cast<float>(value);
+  y_rotation_label_->setText(QString("Y: %1°").arg(rotation_value, 0, 'f', 1));
+
+  auto models = core::ModelManager::Instance().GetAllModels();
+  for (auto &model : models) {
+    glm::vec3 rotation = model->GetRotation();
+    rotation.y = rotation_value;
+    model->SetRotation(rotation);
+  }
 }
 
 void ObjectControlWidget::HandleZRotationChanged(const int value) {
-  z_rotation_label_->setText(QString("Z: %1").arg(value));
+  float rotation_value = static_cast<float>(value);
+  z_rotation_label_->setText(QString("Z: %1°").arg(rotation_value, 0, 'f', 1));
+
+  auto models = core::ModelManager::Instance().GetAllModels();
+  for (auto &model : models) {
+    glm::vec3 rotation = model->GetRotation();
+    rotation.z = rotation_value;
+    model->SetRotation(rotation);
+  }
 }
 
 void ObjectControlWidget::HandleXTranslationChanged(const int value) {
-  x_translation_label_->setText(QString("X: %1").arg(value));
+  float translated_value = value * 0.01f;
+  x_translation_label_->setText(
+      QString("X: %1").arg(translated_value, 0, 'f', 2));
+
+  auto models = core::ModelManager::Instance().GetAllModels();
+  for (auto &model : models) {
+    glm::vec3 translate = model->GetTranslation();
+    translate.x = translated_value;
+    model->SetTranslation(translate);
+  }
 }
 
 void ObjectControlWidget::HandleYTranslationChanged(const int value) {
-  y_translation_label_->setText(QString("Y: %1").arg(value));
+  float translated_value = value * 0.01f;
+  y_translation_label_->setText(
+      QString("Y: %1").arg(translated_value, 0, 'f', 2));
+
+  auto models = core::ModelManager::Instance().GetAllModels();
+  for (auto &model : models) {
+    glm::vec3 translate = model->GetTranslation();
+    translate.y = translated_value;
+    model->SetTranslation(translate);
+  }
 }
 
 void ObjectControlWidget::HandleZTranslationChanged(const int value) {
-  z_translation_label_->setText(QString("Z: %1").arg(value));
+  float translated_value = value * 0.01f;
+  z_translation_label_->setText(
+      QString("Z: %1").arg(translated_value, 0, 'f', 2));
+
+  auto models = core::ModelManager::Instance().GetAllModels();
+  for (auto &model : models) {
+    glm::vec3 translate = model->GetTranslation();
+    translate.z = translated_value;
+    model->SetTranslation(translate);
+  }
 }
 
 void ObjectControlWidget::HandleXScaleChanged(const int value) {
-  x_scale_label_->setText(QString("X: %1").arg(value, 0, 'f', 2));
+  float scaled_value = value * 0.01f;
+  x_scale_label_->setText(QString("X: %1").arg(scaled_value, 0, 'f', 3));
+
+  auto models = core::ModelManager::Instance().GetAllModels();
+  for (auto &model : models) {
+    glm::vec3 scale = model->GetScale();
+    scale.x = scaled_value;
+    model->SetScale(scale);
+  }
 }
 
 void ObjectControlWidget::HandleYScaleChanged(const int value) {
-  y_scale_label_->setText(QString("Y: %1").arg(value, 0, 'f', 2));
+  float scaled_value = value * 0.01f;
+  y_scale_label_->setText(QString("Y: %1").arg(scaled_value, 0, 'f', 3));
+
+  auto models = core::ModelManager::Instance().GetAllModels();
+  for (auto &model : models) {
+    glm::vec3 scale = model->GetScale();
+    scale.y = scaled_value;
+    model->SetScale(scale);
+  }
 }
 
 void ObjectControlWidget::HandleZScaleChanged(const int value) {
-  z_scale_label_->setText(QString("Z: %1").arg(value, 0, 'f', 2));
+  float scaled_value = value * 0.01f;
+  z_scale_label_->setText(QString("Z: %1").arg(scaled_value, 0, 'f', 3));
+
+  auto models = core::ModelManager::Instance().GetAllModels();
+  for (auto &model : models) {
+    glm::vec3 scale = model->GetScale();
+    scale.z = scaled_value;
+    model->SetScale(scale);
+  }
 }
 
 void ObjectControlWidget::HandleDirectionXChanged(const double value) {}
@@ -289,17 +366,17 @@ void ObjectControlWidget::HandleSpecularChanged() {
 }
 
 void ObjectControlWidget::ResetSliders() {
-  x_rotation_slider_->setValue(x_rotation_slider_->minimum());
-  y_rotation_slider_->setValue(y_rotation_slider_->minimum());
-  z_rotation_slider_->setValue(z_rotation_slider_->minimum());
+  x_rotation_slider_->setValue(0);
+  y_rotation_slider_->setValue(0);
+  z_rotation_slider_->setValue(0);
 
-  x_translation_slider_->setValue(x_translation_slider_->minimum());
-  y_translation_slider_->setValue(y_translation_slider_->minimum());
-  z_translation_slider_->setValue(z_translation_slider_->minimum());
+  x_translation_slider_->setValue(0);
+  y_translation_slider_->setValue(0);
+  z_translation_slider_->setValue(0);
 
-  x_scale_slider_->setValue(x_scale_slider_->minimum());
-  y_scale_slider_->setValue(y_scale_slider_->minimum());
-  z_scale_slider_->setValue(z_scale_slider_->minimum());
+  x_scale_slider_->setValue(100); // 초기값 1.000 (100 * 0.01)
+  y_scale_slider_->setValue(100);
+  z_scale_slider_->setValue(100);
 }
 
 } // namespace widgets

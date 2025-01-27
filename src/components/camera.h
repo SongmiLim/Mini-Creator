@@ -15,15 +15,16 @@ public:
 
   void SetPerspective(float fov, float aspect_ratio, float near_plane,
                       float far_plane);
+  void SetAspectRatio(int width, int height);
   QMatrix4x4 GetViewMatrix() const;
   QMatrix4x4 GetProjectionMatrix() const;
 
-  void FitToBoundingBox(const glm::vec3& min_bound, const glm::vec3& max_bound);
+  void FitToBoundingBox(const glm::vec3 &min_bound, const glm::vec3 &max_bound);
 
 private:
-    QVector3D position_;
-    QVector3D target_;
-    QVector3D up_;
+  QVector3D position_;
+  QVector3D target_;
+  QVector3D up_;
 
   float fov_;
   float aspect_ratio_;
