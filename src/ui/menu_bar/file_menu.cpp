@@ -16,13 +16,12 @@ FileMenu::FileMenu() : QMenu("&File") {
 
 void FileMenu::SetupActions() {
   new_action_ = new QAction(
-      QIcon::fromTheme("document-new").pixmap(QSize(16, 16)),
-      "&New", this);
+      QIcon::fromTheme("document-new").pixmap(QSize(16, 16)), "&New", this);
   import_action_ = new QAction(
-      QIcon::fromTheme("document-open").pixmap(QSize(16, 16)),
-      "&Import", this);
+      QIcon::fromTheme("document-open").pixmap(QSize(16, 16)), "&Import", this);
 
-  QMenu::connect(new_action_, &QAction::triggered, this, &FileMenu::OnNewTriggered);
+  QMenu::connect(new_action_, &QAction::triggered, this,
+                 &FileMenu::OnNewTriggered);
   QMenu::connect(import_action_, &QAction::triggered, this,
                  &FileMenu::OnImportTriggered);
 }
@@ -35,13 +34,15 @@ void FileMenu::AddActionsToMenu() {
 void FileMenu::OnNewTriggered() {}
 
 void FileMenu::OnImportTriggered() {
-  commands::CommandImport::ImportTestCubeModel();
-  // QString fileName =
-  //     QFileDialog::getOpenFileName(this, "file explore", "", "*.obj, *fbx");
+  QString fileName = QFileDialog::getOpenFileName(
+      this, "File Explorer", "",
+      "3D Model Files (*.obj *.fbx);;OBJ Files (*.obj);;FBX Files (*.fbx)");
 
-  // if (!fileName.isEmpty()) {
-  //   QMessageBox::information(this, "open", "selected file: " + fileName);
-  // }
+  if (!fileName.isEmpty()) {
+    commands::CommandImport::Execute(fileName);
+  } else {
+    QMessageBox::warning(this, "Error", "No file selected!");
+  }
 }
 
 } // namespace menu_bar

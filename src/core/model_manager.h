@@ -1,7 +1,7 @@
 #ifndef MODEL_MANAGER_H
 #define MODEL_MANAGER_H
 
-#include "model.h"
+#include "../model/model.h"
 #include <vector>
 #include <memory>
 
@@ -12,15 +12,15 @@ class ModelManager {
 public:
     static ModelManager& Instance();
 
-    void AddModel(std::shared_ptr<Model> model);
-    std::shared_ptr<Model> GetModel(const QString& name) const;
-    const std::vector<std::shared_ptr<Model>>& GetAllModels() const;
+    void AddModel(std::shared_ptr<model::Model> model);
+    std::shared_ptr<model::Model> GetModel(const QString& name) const;
+    const std::vector<std::shared_ptr<model::Model>>& GetAllModels() const;
 
 private:
     ModelManager() = default;
     ~ModelManager() = default;
     
-    std::vector<std::shared_ptr<Model>> models_;
+    std::vector<std::shared_ptr<model::Model>> models_;
 };
 
 } // namespace core
