@@ -1,5 +1,6 @@
 #include "mesh.h"
 
+#include <QFileInfo>
 #include <qdebug.h>
 
 namespace mini_creator {
@@ -23,12 +24,11 @@ void Mesh::SetVertices(const std::vector<glm::vec3> &vertices) {
     qDebug() << "Mesh::SetVertices - Empty vertex data.";
     return;
   }
+
   vbo_vertices_.create();
   vbo_vertices_.bind();
   vbo_vertices_.allocate(vertices.data(), vertices.size() * sizeof(glm::vec3));
   vbo_vertices_.release();
-
-  // vertex_count_ = static_cast<int>(vertices_.size());
 }
 
 void Mesh::SetNormals(const std::vector<glm::vec3> &normals) {
@@ -39,6 +39,18 @@ void Mesh::SetNormals(const std::vector<glm::vec3> &normals) {
   vbo_normals_.bind();
   vbo_normals_.allocate(normals.data(), normals.size() * sizeof(glm::vec3));
   vbo_normals_.release();
+}
+
+void Mesh::SetIndices(const std::vector<uint32_t> &indices) {
+  if (indices.empty()) {
+    return;
+  }
+  ebo_.create();
+  ebo_.bind();
+  ebo_.allocate(indices.data(), indices.size() * sizeof(uint32_t));
+  ebo_.release();
+
+  index_count_ = static_cast<int>(indices.size());
 }
 
 void Mesh::SetTexCoords(const std::vector<glm::vec2> &texCoords) {
@@ -52,24 +64,64 @@ void Mesh::SetTexCoords(const std::vector<glm::vec2> &texCoords) {
   vbo_texCoords_.release();
 }
 
-void Mesh::SetIndices(const std::vector<uint32_t> &indices) {
-  if (indices.empty()) {
+void Mesh::CreateDefaultWhiteTexture() {
+  if (texture_) {
+    delete texture_;
+    texture_ = nullptr;
+  }
+
+  QImage whiteImage(1, 1, QImage::Format_RGB888);
+  whiteImage.fill(QColor(255, 255, 255));
+
+  texture_ = new QOpenGLTexture(whiteImage);
+
+  if (!texture_->isCreated()) {
+    qDebug() << "Error: Failed to create default white texture!";
+    delete texture_;
+    texture_ = nullptr;
     return;
   }
-  ebo_.create();
-  ebo_.bind();
-  ebo_.allocate(indices.data(), indices.size() * sizeof(uint32_t));
-  ebo_.release();
 
-  index_count_ = static_cast<int>(indices.size());
+  texture_->setWrapMode(QOpenGLTexture::Repeat);
+  texture_->setMinificationFilter(QOpenGLTexture::Linear);
+  texture_->setMagnificationFilter(QOpenGLTexture::Linear);
 
-  // qDebug() << "Vertex count:" << vertex_count_;
+  texture_->release();
 }
 
-// void Mesh::SetMaterial(std::shared_ptr<Material> material) {
-//   material_ = material;
-//   qDebug() << "Material set for mesh.";
-// }
+void Mesh::LoadTexture(const QString &file_path) {
+  if (texture_) {
+    delete texture_;
+    texture_ = nullptr;
+  }
+
+  QFileInfo file_info(file_path);
+  if (!file_info.exists()) {
+    qDebug() << "Error: Texture file does not exist ->" << file_path;
+    CreateDefaultWhiteTexture();
+    return;
+  }
+
+  QImage image(file_path);
+  if (image.isNull()) {
+    qDebug() << "Error: Failed to load image ->" << file_path;
+    CreateDefaultWhiteTexture();
+    return;
+  }
+
+  texture_ = new QOpenGLTexture(image.mirrored());
+  if (!texture_->isCreated()) {
+    qDebug() << "Failed to create OpenGL texture for ->" << file_path;
+    delete texture_;
+    texture_ = nullptr;
+  }
+  texture_->release();
+}
+
+void Mesh::SetDiffuseColor(const glm::vec3 &color) { diffuse_color_ = color; }
+void Mesh::SetSpecularColor(const glm::vec3 &color) { specular_color_ = color; }
+void Mesh::SetAmbientColor(const glm::vec3 &color) { ambient_color_ = color; }
+void Mesh::SetShininess(float shininess) { shininess_ = shininess; }
 
 void Mesh::Draw(QOpenGLShaderProgram *shader_program) {
   if (!shader_program) {
@@ -77,16 +129,30 @@ void Mesh::Draw(QOpenGLShaderProgram *shader_program) {
     return;
   }
 
+  shader_program->setUniformValue("material.diffuse", diffuse_color_.r,
+                                  diffuse_color_.g, diffuse_color_.b);
+  shader_program->setUniformValue("material.specular", specular_color_.r,
+                                  specular_color_.g, specular_color_.b);
+  shader_program->setUniformValue("material.ambient", ambient_color_.r,
+                                  ambient_color_.g, ambient_color_.b);
+  shader_program->setUniformValue("material.shininess", shininess_);
+
+  if (texture_) {
+    glActiveTexture(GL_TEXTURE0);
+    texture_->bind();
+    shader_program->setUniformValue("textureMap", 0);
+  } else {
+    qDebug() << "Warning: No texture bound! This may cause rendering issues.";
+  }
+
   if (vbo_vertices_.isCreated()) {
     vbo_vertices_.bind();
     int vertex_location = shader_program->attributeLocation("position");
-    if (vertex_location == -1) {
-      qDebug() << "Shader attribute 'position' not found.";
-      return;
+    if (vertex_location != -1) {
+      shader_program->enableAttributeArray(vertex_location);
+      shader_program->setAttributeBuffer(vertex_location, GL_FLOAT, 0, 3,
+                                         sizeof(glm::vec3));
     }
-    shader_program->enableAttributeArray(vertex_location);
-    shader_program->setAttributeBuffer(vertex_location, GL_FLOAT, 0, 3,
-                                       sizeof(glm::vec3));
   }
 
   if (vbo_normals_.isCreated()) {
@@ -96,32 +162,31 @@ void Mesh::Draw(QOpenGLShaderProgram *shader_program) {
       shader_program->enableAttributeArray(normalLocation);
       shader_program->setAttributeBuffer(normalLocation, GL_FLOAT, 0, 3,
                                          sizeof(glm::vec3));
-    } else {
-      // qDebug() << "Mesh::Draw - Normal attribute not found.";
     }
   }
 
-  // vbo_texCoords_.bind();
-  // int texCoordLocation = shader_program->attributeLocation("texCoord");
-  // if (texCoordLocation != -1) {
-  //   shader_program->enableAttributeArray(texCoordLocation);
-  //   shader_program->setAttributeBuffer(texCoordLocation, GL_FLOAT, 0, 2,
-  //                                      sizeof(glm::vec2));
-  // } else {
-  //   // qDebug() << "Mesh::Draw - Texture coordinate attribute not found.";
-  // }
+  if (vbo_texCoords_.isCreated()) {
+    vbo_texCoords_.bind();
+    int texCoordLocation = shader_program->attributeLocation("texCoord");
+    if (texCoordLocation != -1) {
+      shader_program->enableAttributeArray(texCoordLocation);
+      shader_program->setAttributeBuffer(texCoordLocation, GL_FLOAT, 0, 2,
+                                         sizeof(glm::vec2));
+    }
+  }
 
   if (ebo_.isCreated()) {
     ebo_.bind();
     glDrawElements(GL_TRIANGLES, index_count_, GL_UNSIGNED_INT, nullptr);
+    ebo_.release();
+  }
 
-    // vbo_vertices_.release();
-    // vbo_normals_.release();
-    // vbo_texCoords_.release();
-    // ebo_.release();
-    // shader_program->release();
-  } else {
-    // glDrawArray(GL_TRIANGLES, index_count_, GL_UNSIGNED_INT, nullptr);
+  vbo_vertices_.release();
+  vbo_normals_.release();
+  vbo_texCoords_.release();
+
+  if (texture_) {
+    texture_->release();
   }
 }
 

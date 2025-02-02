@@ -18,6 +18,7 @@ public:
   void SetAspectRatio(int width, int height);
   QMatrix4x4 GetViewMatrix() const;
   QMatrix4x4 GetProjectionMatrix() const;
+  QVector3D GetPosition() const;
 
   void FitToBoundingBox(const glm::vec3 &min_bound, const glm::vec3 &max_bound);
 

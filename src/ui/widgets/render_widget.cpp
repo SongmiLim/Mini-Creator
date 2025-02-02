@@ -6,7 +6,6 @@
 #include <QDebug>
 #include <Qtimer>
 
-
 namespace mini_creator {
 namespace ui {
 namespace widgets {
@@ -63,6 +62,11 @@ void RenderWidget::paintGL() {
   glEnable(GL_DEPTH_TEST);
 
   shader_program_->bind();
+
+  shader_program_->setUniformValue("lightPos", 10.0f, 10.0f, 10.0f);
+  shader_program_->setUniformValue("viewPos", camera_->GetPosition().x(),
+                                   camera_->GetPosition().y(),
+                                   camera_->GetPosition().z());
 
   auto &models = core::ModelManager::Instance().GetAllModels();
   for (auto &model : models) {

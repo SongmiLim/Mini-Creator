@@ -40,6 +40,8 @@ QMatrix4x4 Camera::GetViewMatrix() const { return view_matrix_; }
 
 QMatrix4x4 Camera::GetProjectionMatrix() const { return projection_matrix_; }
 
+QVector3D Camera::GetPosition() const { return position_; }
+
 void Camera::FitToBoundingBox(const glm::vec3 &min_bound,
                               const glm::vec3 &max_bound) {
   glm::vec3 center = (min_bound + max_bound) * 0.5f;

@@ -10,8 +10,6 @@
 
 #include "../components/mesh.h"
 #include "../components/model.h"
-
-
 namespace mini_creator {
 namespace commands {
 
@@ -26,6 +24,7 @@ private:
                           std::shared_ptr<components::Model> &model);
   static std::shared_ptr<components::Mesh> ProcessMesh(aiMesh *mesh,
                                                        const aiScene *scene);
+  static QString file_path_;
 };
 
 } // namespace commands
