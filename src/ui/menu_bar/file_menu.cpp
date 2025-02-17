@@ -5,6 +5,7 @@
 #include <QMessageBox>
 
 #include "../../commands/command_import.h"
+
 namespace mini_creator {
 namespace ui {
 namespace menu_bar {

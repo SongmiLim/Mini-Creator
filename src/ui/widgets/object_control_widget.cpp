@@ -13,9 +13,6 @@ namespace widgets {
 ObjectControlWidget::ObjectControlWidget(QWidget *parent) : QWidget(parent) {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
 
-  animation_checkbox_ = new QCheckBox("Animation", this);
-  main_layout->addWidget(animation_checkbox_);
-
   QGroupBox *transform_group_box = CreateTransformGroupBox();
   main_layout->addWidget(transform_group_box);
 
