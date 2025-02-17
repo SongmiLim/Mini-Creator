@@ -1,6 +1,10 @@
 # Mini Creator
 
-**Mini Creator**는 C++과 OpenGL을 기반으로 개발된 **경량 3D 엔진**으로, **3D 모델 로드 및 렌더링, 카메라 조작, 조명 설정** 등의 기능을 제공합니다.
+**Mini Creator**는 C++과 OpenGL을 기반으로 개발된 **경량 3D 엔진**으로, <br>
+**3D 모델 로드 및 렌더링, 카메라 조작, 조명 설정** 등의 기능을 제공합니다.
+<br>
+
+![Image](https://github.com/user-attachments/assets/ea811bbd-77a2-402c-a081-65ffa3538ebc)
 
 ---
 <br><br>
