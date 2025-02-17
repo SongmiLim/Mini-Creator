@@ -64,19 +64,19 @@ void Mesh::SetTexCoords(const std::vector<glm::vec2> &texCoords) {
   vbo_texCoords_.release();
 }
 
-void Mesh::CreateDefaultWhiteTexture() {
+void Mesh::CreateDefaultTexture() {
   if (texture_) {
     delete texture_;
     texture_ = nullptr;
   }
 
-  QImage whiteImage(1, 1, QImage::Format_RGB888);
-  whiteImage.fill(QColor(255, 255, 255));
+  QImage default_image(1, 1, QImage::Format_RGB888);
+  default_image.fill(QColor(160, 160, 160));
 
-  texture_ = new QOpenGLTexture(whiteImage);
+  texture_ = new QOpenGLTexture(default_image);
 
   if (!texture_->isCreated()) {
-    qDebug() << "Error: Failed to create default white texture!";
+    qDebug() << "Error: Failed to create default texture!";
     delete texture_;
     texture_ = nullptr;
     return;
@@ -98,14 +98,14 @@ void Mesh::LoadTexture(const QString &file_path) {
   QFileInfo file_info(file_path);
   if (!file_info.exists()) {
     qDebug() << "Error: Texture file does not exist ->" << file_path;
-    CreateDefaultWhiteTexture();
+    CreateDefaultTexture();
     return;
   }
 
   QImage image(file_path);
   if (image.isNull()) {
     qDebug() << "Error: Failed to load image ->" << file_path;
-    CreateDefaultWhiteTexture();
+    CreateDefaultTexture();
     return;
   }
 

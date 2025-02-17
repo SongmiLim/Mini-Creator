@@ -65,8 +65,8 @@ CommandImport::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
     normals[i] = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y,
                            mesh->mNormals[i].z);
 
-    tex_coords[i] =
-        glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+    tex_coords[i] = glm::vec2(mesh->mTextureCoords[0][i].x,
+                              1.0f - mesh->mTextureCoords[0][i].y);
   }
 
   for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
@@ -102,7 +102,7 @@ CommandImport::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
       QString absoluteTexturePath = objDirectory + "/" + relativeTexturePath;
       new_mesh->LoadTexture(absoluteTexturePath);
     } else {
-      new_mesh->CreateDefaultWhiteTexture();
+      new_mesh->CreateDefaultTexture();
     }
 
     if (material->Get(AI_MATKEY_COLOR_SPECULAR, specular_color) == AI_SUCCESS) {

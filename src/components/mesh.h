@@ -24,7 +24,7 @@ public:
 
   void SetTexCoords(const std::vector<glm::vec2> &texCoords);
   void LoadTexture(const QString &file_path);
-  void CreateDefaultWhiteTexture();
+  void CreateDefaultTexture();
 
   void SetDiffuseColor(const glm::vec3 &color);
   void SetSpecularColor(const glm::vec3 &color);
