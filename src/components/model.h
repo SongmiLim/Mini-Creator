@@ -32,9 +32,14 @@ public:
   const std::vector<std::shared_ptr<Mesh>> &GetMeshes() { return meshes_; }
   const QString &GetName() { return name_; }
 
-  void Draw(QOpenGLShaderProgram *shader_program);
+  void Draw(const QMatrix4x4 &view_matrix, const QMatrix4x4 &projection_matrix,
+            const QVector3D &light_position, const QVector3D &camera_position);
 
 private:
+  void SetupShaders();
+
+  QOpenGLShaderProgram *shader_program_;
+
   QString name_;
   std::vector<std::shared_ptr<Mesh>> meshes_;
   glm::vec3 translation_;

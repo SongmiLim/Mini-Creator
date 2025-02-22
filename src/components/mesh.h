@@ -38,7 +38,7 @@ public:
 private:
   QOpenGLBuffer vbo_vertices_;
   QOpenGLBuffer vbo_normals_;
-  QOpenGLBuffer vbo_texCoords_;
+  QOpenGLBuffer vbo_tex_coords_;
   QOpenGLBuffer ebo_;
   QOpenGLTexture *texture_ = nullptr;
 

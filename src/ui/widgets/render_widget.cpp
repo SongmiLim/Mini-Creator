@@ -12,7 +12,7 @@ namespace ui {
 namespace widgets {
 
 RenderWidget::RenderWidget(QWidget *parent)
-    : QOpenGLWidget(parent), shader_program_(nullptr), light_shader_program_(nullptr) {
+    : QOpenGLWidget(parent), light_shader_program_(nullptr) {
   camera_ = std::make_shared<components::Camera>();
   light_ = std::make_shared<components::Light>();
 
@@ -53,17 +53,11 @@ void RenderWidget::paintGL() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
 
-  shader_program_->bind();
-  shader_program_->setUniformValue("view", camera_->GetViewMatrix());
-  shader_program_->setUniformValue("projection",
-                                   camera_->GetProjectionMatrix());
-  shader_program_->setUniformValue("lightPos", light_->GetPosition().x(),
-                                   light_->GetPosition().y(),
-                                   light_->GetPosition().z());
-  shader_program_->setUniformValue("cameraPos", camera_->GetPosition().x(),
-                                   camera_->GetPosition().y(),
-                                   camera_->GetPosition().z());
-  
+  const QMatrix4x4 &view_matrix = camera_->GetViewMatrix();
+  const QMatrix4x4 &projection_matrix = camera_->GetProjectionMatrix();
+  const QVector3D &light_position = light_->GetPosition();
+  const QVector3D &camera_position = camera_->GetPosition();
+
   auto &models = core::ModelManager::Instance().GetAllModels();
   for (auto &model : models) {
 
@@ -71,13 +65,14 @@ void RenderWidget::paintGL() {
       AdjustCameraToModel();
       core::ModelManager::Instance().ResetBoundingBoxChangedFlag();
     }
-    model->Draw(shader_program_);
+    model->Draw(view_matrix, projection_matrix, light_position,
+                camera_position);
   }
 
   light_shader_program_->bind();
   light_shader_program_->setUniformValue("view", camera_->GetViewMatrix());
   light_shader_program_->setUniformValue("projection",
-                                   camera_->GetProjectionMatrix());
+                                         camera_->GetProjectionMatrix());
   light_->Draw(light_shader_program_);
 }
 
@@ -123,28 +118,6 @@ void RenderWidget::keyPressEvent(QKeyEvent *event) {
 }
 
 void RenderWidget::SetupShaders() {
-  shader_program_ = new QOpenGLShaderProgram();
-  if (!shader_program_->addShaderFromSourceFile(
-          QOpenGLShader::Vertex, QCoreApplication::applicationDirPath() +
-                                     "/../../src/graphics/shader/mesh.vs")) {
-    qDebug() << QCoreApplication::applicationDirPath() +
-                    "/../../src/graphics/shader/mesh.vs";
-    qDebug() << "Vertex Shader Error:" << shader_program_->log();
-  }
-
-  if (!shader_program_->addShaderFromSourceFile(
-          QOpenGLShader::Fragment, QCoreApplication::applicationDirPath() +
-                                       "/../../src/graphics/shader/mesh.fs")) {
-    qDebug() << "Fragment Shader Error:" << shader_program_->log();
-  }
-
-  if (!shader_program_->link()) {
-    qDebug() << "Shader Program Linking Error:" << shader_program_->log();
-  }
-  if (!shader_program_->bind()) {
-    qDebug() << "Shader Program Binding Error:" << shader_program_->log();
-  }
-
   light_shader_program_ = new QOpenGLShaderProgram();
   if (!light_shader_program_->addShaderFromSourceFile(
           QOpenGLShader::Vertex,

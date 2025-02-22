@@ -22,6 +22,7 @@ public:
 private:
   ModelManager() = default;
   ~ModelManager() = default;
+
   bool is_bounding_box_changed = false;
   std::vector<std::shared_ptr<components::Model>> models_;
 };

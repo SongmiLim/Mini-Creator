@@ -46,10 +46,9 @@ private:
   void SetupUI();
   void UpdateToggleButtonText();
 
-  QOpenGLShaderProgram *shader_program_;
-  QOpenGLShaderProgram *light_shader_program_;
-
   QPushButton *toggle_button_;
+
+  QOpenGLShaderProgram *light_shader_program_;
 
   std::shared_ptr<components::Camera> camera_;
   std::shared_ptr<components::Light> light_;

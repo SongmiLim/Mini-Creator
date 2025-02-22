@@ -14,7 +14,7 @@ Mesh::Mesh() : ebo_(QOpenGLBuffer::IndexBuffer) {
 Mesh::~Mesh() {
   vbo_vertices_.destroy();
   vbo_normals_.destroy();
-  vbo_texCoords_.destroy();
+  vbo_tex_coords_.destroy();
   ebo_.destroy();
 }
 
@@ -50,18 +50,18 @@ void Mesh::SetIndices(const std::vector<uint32_t> &indices) {
   ebo_.allocate(indices.data(), indices.size() * sizeof(uint32_t));
   ebo_.release();
 
-  index_count_ = static_cast<int>(indices.size());
+  index_count_ = indices.size();
 }
 
-void Mesh::SetTexCoords(const std::vector<glm::vec2> &texCoords) {
-  if (texCoords.empty()) {
+void Mesh::SetTexCoords(const std::vector<glm::vec2> &tex_coords) {
+  if (tex_coords.empty()) {
     return;
   }
-  vbo_texCoords_.create();
-  vbo_texCoords_.bind();
-  vbo_texCoords_.allocate(texCoords.data(),
-                          texCoords.size() * sizeof(glm::vec2));
-  vbo_texCoords_.release();
+  vbo_tex_coords_.create();
+  vbo_tex_coords_.bind();
+  vbo_tex_coords_.allocate(tex_coords.data(),
+                           tex_coords.size() * sizeof(glm::vec2));
+  vbo_tex_coords_.release();
 }
 
 void Mesh::CreateDefaultTexture() {
@@ -165,8 +165,8 @@ void Mesh::Draw(QOpenGLShaderProgram *shader_program) {
     }
   }
 
-  if (vbo_texCoords_.isCreated()) {
-    vbo_texCoords_.bind();
+  if (vbo_tex_coords_.isCreated()) {
+    vbo_tex_coords_.bind();
     int texCoordLocation = shader_program->attributeLocation("texCoord");
     if (texCoordLocation != -1) {
       shader_program->enableAttributeArray(texCoordLocation);
@@ -183,7 +183,7 @@ void Mesh::Draw(QOpenGLShaderProgram *shader_program) {
 
   vbo_vertices_.release();
   vbo_normals_.release();
-  vbo_texCoords_.release();
+  vbo_tex_coords_.release();
 
   if (texture_) {
     texture_->release();
