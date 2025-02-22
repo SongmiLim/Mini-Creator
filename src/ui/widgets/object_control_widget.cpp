@@ -4,7 +4,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include "../../core//model_manager.h"
+#include "core/model_manager.h"
 
 namespace mini_creator {
 namespace ui {
@@ -371,7 +371,7 @@ void ObjectControlWidget::ResetSliders() {
   y_translation_slider_->setValue(0);
   z_translation_slider_->setValue(0);
 
-  x_scale_slider_->setValue(100); // 초기값 1.000 (100 * 0.01)
+  x_scale_slider_->setValue(100);
   y_scale_slider_->setValue(100);
   z_scale_slider_->setValue(100);
 }

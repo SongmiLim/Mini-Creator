@@ -11,7 +11,7 @@
 #include <QPushButton>
 #include <QWheelEvent>
 
-#include "../../components/camera.h"
+#include "components/camera.h"
 
 namespace mini_creator {
 namespace ui {

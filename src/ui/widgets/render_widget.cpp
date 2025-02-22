@@ -1,11 +1,11 @@
 #include "render_widget.h"
 
-#include "../../components/camera_mode.h"
-#include "../../core/model_manager.h"
-
 #include <QCoreApplication>
 #include <QDebug>
 #include <Qtimer>
+
+#include "components/camera_mode.h"
+#include "core/model_manager.h"
 
 namespace mini_creator {
 namespace ui {

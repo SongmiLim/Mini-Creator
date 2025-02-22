@@ -2,14 +2,14 @@
 #define COMMAND_IMPORT_H
 
 #include <QString>
-
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <glm/glm.hpp>
 
-#include "../components/mesh.h"
-#include "../components/model.h"
+#include "components/mesh.h"
+#include "components/model.h"
+
 namespace mini_creator {
 namespace commands {
 

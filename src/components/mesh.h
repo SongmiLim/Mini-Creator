@@ -1,14 +1,14 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include <memory>
+
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 #include <QString>
 #include <glm/glm.hpp>
-
-#include <memory>
 
 namespace mini_creator {
 namespace components {

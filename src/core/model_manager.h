@@ -1,9 +1,10 @@
 #ifndef MODEL_MANAGER_H
 #define MODEL_MANAGER_H
 
-#include "../components/model.h"
 #include <memory>
 #include <vector>
+
+#include "components/model.h"
 
 namespace mini_creator {
 namespace core {

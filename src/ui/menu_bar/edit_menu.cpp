@@ -4,7 +4,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-#include "../../commands/command_import.h"
+#include "commands/command_import.h"
 
 namespace mini_creator {
 namespace ui {

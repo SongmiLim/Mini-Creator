@@ -1,6 +1,6 @@
 #include "model.h"
 
-#include <qdebug.h>
+#include <QDebug>
 
 namespace mini_creator {
 namespace components {

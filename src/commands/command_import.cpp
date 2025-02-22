@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#include "../core/model_manager.h"
+#include "core/model_manager.h"
 
 namespace mini_creator {
 namespace commands {

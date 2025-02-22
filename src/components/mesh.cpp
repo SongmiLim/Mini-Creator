@@ -1,7 +1,8 @@
 #include "mesh.h"
 
+#include <QDebug>
 #include <QFileInfo>
-#include <qdebug.h>
+
 
 namespace mini_creator {
 namespace components {

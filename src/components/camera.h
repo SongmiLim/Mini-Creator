@@ -3,7 +3,6 @@
 
 #include <QMatrix4x4>
 #include <QVector3D>
-
 #include <glm/glm.hpp>
 
 #include "camera_mode.h"

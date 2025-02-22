@@ -1,6 +1,8 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <memory>
+
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
@@ -8,7 +10,6 @@
 #include <glm/glm.hpp>
 
 #include "mesh.h"
-#include <memory>
 
 namespace mini_creator {
 namespace components {

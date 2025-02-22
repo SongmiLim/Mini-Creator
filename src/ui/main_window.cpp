@@ -1,8 +1,9 @@
 #include "main_window.h"
-#include "widgets/render_widget.h"
 
 #include <QHBoxLayout>
 #include <QWidget>
+
+#include "widgets/render_widget.h"
 
 namespace mini_creator {
 namespace ui {

@@ -5,7 +5,6 @@
 
 #include "menu_bar.h"
 #include "tool_bar.h"
-
 #include "widgets/object_control_widget.h"
 #include "widgets/render_widget.h"
 
