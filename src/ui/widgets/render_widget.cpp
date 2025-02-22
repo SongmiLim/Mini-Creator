@@ -1,7 +1,7 @@
 #include "render_widget.h"
 
-#include "../../core/model_manager.h"
 #include "../../components/camera_mode.h"
+#include "../../core/model_manager.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -27,10 +27,9 @@ RenderWidget::RenderWidget(QWidget *parent)
 }
 
 void RenderWidget::SetupUI() {
-  toggle_button_ = new QPushButton("모드 변경 (1인칭)", this);
-  toggle_button_->setFixedSize(120, 30);   // 🔹 버튼 크기 설정
-  toggle_button_->move(width() - 140, 10); // 🔹 오른쪽 상단에 배치
-
+  toggle_button_ = new QPushButton("Camera Mode: Third Person", this);
+  toggle_button_->setFixedSize(170, 30);
+  toggle_button_->move(this->width() - toggle_button_->width() - 10, 10);
   connect(toggle_button_, &QPushButton::clicked, this,
           &RenderWidget::ToggleCameraMode);
 }
@@ -46,7 +45,7 @@ void RenderWidget::resizeGL(int width, int height) {
   camera_->SetAspectRatio(width, height);
   camera_->SetPerspective(45.0f, float(width) / height, 0.1f, 1000.0f);
 
-  toggle_button_->move(width() - 140, 10);
+  toggle_button_->move(this->width() - toggle_button_->width() - 10, 10);
 }
 
 void RenderWidget::paintGL() {
@@ -162,12 +161,11 @@ void RenderWidget::AdjustCameraToModel() {
 void RenderWidget::ToggleCameraMode() {
   camera_->ToggleMode();
   UpdateToggleButtonText();
-  update();
 }
 
 void RenderWidget::UpdateToggleButtonText() {
   if (camera_->GetMode() == components::CameraMode::FirstPerson) {
-    toggle_button_->setText("Camera Mode: First Person ");
+    toggle_button_->setText("Camera Mode: First Person");
   } else {
     toggle_button_->setText("Camera Mode: Third Person");
   }

@@ -19,9 +19,6 @@ Camera::Camera() {
 
   movement_speed_ = 0.5f;
   mouse_sensitivity_ = 0.1f;
-
-  UpdateViewMatrix();
-  UpdateProjectionMatrix();
 }
 
 void Camera::SetAspectRatio(int width, int height) {
@@ -48,10 +45,11 @@ QMatrix4x4 Camera::GetViewMatrix() const { return view_matrix_; }
 QMatrix4x4 Camera::GetProjectionMatrix() const { return projection_matrix_; }
 
 QVector3D Camera::GetPosition() const { return position_; }
-Mode Camera::GetMode() const { return mode_; }
+CameraMode Camera::GetMode() const { return mode_; }
 
 void Camera::ToggleMode() {
-  mode_ = (mode_ == Mode::FirstPerson) ? Mode::ThirdPerson : Mode::FirstPerson;
+  mode_ = (mode_ == CameraMode::FirstPerson) ? CameraMode::ThirdPerson
+                                             : CameraMode::FirstPerson;
 
   UpdateViewMatrix();
   UpdateProjectionMatrix();
@@ -64,7 +62,7 @@ void Camera::FitToBoundingBox(const glm::vec3 &min_bound,
   float radius = glm::length(size) * 0.5f;
   distance_ = radius / std::tan(glm::radians(fov_) / 2.0f);
 
-  if (mode_ == Mode::ThirdPerson) {
+  if (mode_ == CameraMode::ThirdPerson) {
     target_ = QVector3D(center.x, center.y, center.z);
     position_ = target_ - front_ * distance_;
   } else {
@@ -76,8 +74,8 @@ void Camera::FitToBoundingBox(const glm::vec3 &min_bound,
 }
 
 void Camera::ProcessMouseMovement(float xoffset, float yoffset) {
-  yaw_ -= xoffset * mouse_sensitivity_;
-  pitch_ += yoffset * mouse_sensitivity_;
+  yaw_ += xoffset * mouse_sensitivity_;
+  pitch_ -= yoffset * mouse_sensitivity_;
 
   if (pitch_ > 89.0f)
     pitch_ = 89.0f;
@@ -90,7 +88,7 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset) {
   front.setZ(sin(qDegreesToRadians(yaw_)) * cos(qDegreesToRadians(pitch_)));
   front_ = front.normalized();
 
-  if (mode_ == Mode::ThirdPerson) {
+  if (mode_ == CameraMode::ThirdPerson) {
     position_ = target_ - front_ * distance_;
   }
 
@@ -107,8 +105,8 @@ void Camera::ProcessMouseScroll(float yoffset) {
 }
 
 void Camera::ProcessKeyboardInput(const QString &key) {
-  if (mode_ == Mode::ThirdPerson) {
-    // 🔹 3인칭: `target_`을 이동시키고 `position_`을 따라가도록 함
+  if (mode_ == CameraMode::ThirdPerson) {
+    // Third-person mode: Move `target_` and keep `position_` following it
     if (key == "W")
       target_ += front_ * movement_speed_;
     if (key == "S")
@@ -121,18 +119,18 @@ void Camera::ProcessKeyboardInput(const QString &key) {
           QVector3D::crossProduct(front_, up_).normalized() * movement_speed_;
 
     position_ =
-        target_ - front_ * distance_; // 🔹 카메라가 항상 캐릭터 뒤쪽에서 유지됨
+        target_ - front_ * distance_; // Keep the camera behind the character
   } else {
-    // 🔹 1인칭: `front_` 방향으로 직접 이동
+    // First-person mode: Move directly in the `front_` direction
     if (key == "W")
       position_ += front_ * movement_speed_;
     if (key == "S")
       position_ -= front_ * movement_speed_;
     if (key == "A")
-      position_ +=
+      position_ -=
           QVector3D::crossProduct(front_, up_).normalized() * movement_speed_;
     if (key == "D")
-      position_ -=
+      position_ +=
           QVector3D::crossProduct(front_, up_).normalized() * movement_speed_;
   }
   UpdateViewMatrix();
@@ -141,7 +139,7 @@ void Camera::ProcessKeyboardInput(const QString &key) {
 void Camera::UpdateViewMatrix() {
   view_matrix_.setToIdentity();
 
-  if (mode_ == Mode::ThirdPerson) {
+  if (mode_ == CameraMode::ThirdPerson) {
     view_matrix_.lookAt(position_, target_, up_);
   } else {
     view_matrix_.lookAt(position_, position_ + front_, up_);

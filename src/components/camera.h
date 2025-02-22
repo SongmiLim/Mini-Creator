@@ -6,7 +6,7 @@
 
 #include <glm/glm.hpp>
 
-#include "components/camera_mode.h"
+#include "camera_mode.h"
 
 namespace mini_creator {
 namespace components {
@@ -32,8 +32,7 @@ public:
   void ProcessMouseScroll(float yoffset);
   void ProcessKeyboardInput(const QString &key);
 
-  Mode GetMode() const;
-  static enum struct Mode { FirstPerson, ThirdPerson };
+  CameraMode GetMode() const;
 
 private:
   void UpdateViewMatrix();
