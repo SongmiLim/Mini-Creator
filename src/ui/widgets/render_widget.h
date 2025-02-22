@@ -1,11 +1,15 @@
 #ifndef RENDER_WIDGET_H
 #define RENDER_WIDGET_H
 
+#include <QKeyEvent>
+#include <QMouseEvent>
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLWidget>
+#include <QPushButton>
+#include <QWheelEvent>
 
 #include "../../components/camera.h"
 
@@ -19,22 +23,35 @@ class RenderWidget : public QOpenGLWidget, protected QOpenGLFunctions {
 public:
   explicit RenderWidget(QWidget *parent = nullptr);
   ~RenderWidget() = default;
-  void AdjustCameraToModel();
 
 protected:
   void initializeGL() override;
   void resizeGL(int w, int h) override;
   void paintGL() override;
 
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
+  void keyPressEvent(QKeyEvent *event) override;
+
+private slots:
+  void ToggleCameraMode();
+
 private:
   void SetupShaders();
+  void AdjustCameraToModel();
+
+  void SetupUI();
+  void UpdateToggleButtonText();
 
   QOpenGLShaderProgram *shader_program_;
+  QPushButton *toggle_button_;
+
   std::shared_ptr<components::Camera> camera_;
 
-  QMatrix4x4 projection_matrix_;
-  // QMatrix4x4 view_matrix_;
-  // QMatrix4x4 model_matrix_;
+  bool is_mouse_pressed_ = false;
+  QPoint last_mouse_pos_;
 };
 
 } // namespace widgets

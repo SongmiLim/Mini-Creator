@@ -10,7 +10,7 @@ struct Material {
 uniform Material material;
 uniform sampler2D textureMap;
 uniform vec3 lightPos;
-uniform vec3 viewPos;
+uniform vec3 cameraPos;
 
 in vec3 FragPos;
 in vec3 Normal;
@@ -21,7 +21,7 @@ out vec4 FragColor;
 void main() {
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(lightPos - FragPos);
-    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 viewDir = normalize(cameraPos - FragPos);
 
     vec3 ambient = material.ambient * texture(textureMap, TexCoords).rgb;
 
