@@ -41,8 +41,6 @@ void FileMenu::OnImportTriggered() {
 
   if (!fileName.isEmpty()) {
     commands::CommandImport::Execute(fileName);
-  } else {
-    QMessageBox::warning(this, "Error", "No file selected!");
   }
 }
 

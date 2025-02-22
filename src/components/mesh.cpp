@@ -3,7 +3,6 @@
 #include <QDebug>
 #include <QFileInfo>
 
-
 namespace mini_creator {
 namespace components {
 

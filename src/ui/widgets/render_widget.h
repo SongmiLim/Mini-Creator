@@ -12,6 +12,7 @@
 #include <QWheelEvent>
 
 #include "components/camera.h"
+#include "components/light.h"
 
 namespace mini_creator {
 namespace ui {
@@ -46,9 +47,12 @@ private:
   void UpdateToggleButtonText();
 
   QOpenGLShaderProgram *shader_program_;
+  QOpenGLShaderProgram *light_shader_program_;
+
   QPushButton *toggle_button_;
 
   std::shared_ptr<components::Camera> camera_;
+  std::shared_ptr<components::Light> light_;
 
   bool is_mouse_pressed_ = false;
   QPoint last_mouse_pos_;

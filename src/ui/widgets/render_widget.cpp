@@ -12,8 +12,9 @@ namespace ui {
 namespace widgets {
 
 RenderWidget::RenderWidget(QWidget *parent)
-    : QOpenGLWidget(parent), shader_program_(nullptr) {
+    : QOpenGLWidget(parent), shader_program_(nullptr), light_shader_program_(nullptr) {
   camera_ = std::make_shared<components::Camera>();
+  light_ = std::make_shared<components::Light>();
 
   QTimer *timer = new QTimer(this);
   connect(timer, &QTimer::timeout, this,
@@ -53,15 +54,16 @@ void RenderWidget::paintGL() {
   glEnable(GL_DEPTH_TEST);
 
   shader_program_->bind();
-
   shader_program_->setUniformValue("view", camera_->GetViewMatrix());
   shader_program_->setUniformValue("projection",
                                    camera_->GetProjectionMatrix());
-  shader_program_->setUniformValue("lightPos", 10.0f, 10.0f, 10.0f);
+  shader_program_->setUniformValue("lightPos", light_->GetPosition().x(),
+                                   light_->GetPosition().y(),
+                                   light_->GetPosition().z());
   shader_program_->setUniformValue("cameraPos", camera_->GetPosition().x(),
                                    camera_->GetPosition().y(),
                                    camera_->GetPosition().z());
-
+  
   auto &models = core::ModelManager::Instance().GetAllModels();
   for (auto &model : models) {
 
@@ -71,6 +73,12 @@ void RenderWidget::paintGL() {
     }
     model->Draw(shader_program_);
   }
+
+  light_shader_program_->bind();
+  light_shader_program_->setUniformValue("view", camera_->GetViewMatrix());
+  light_shader_program_->setUniformValue("projection",
+                                   camera_->GetProjectionMatrix());
+  light_->Draw(light_shader_program_);
 }
 
 void RenderWidget::mouseMoveEvent(QMouseEvent *event) {
@@ -135,6 +143,28 @@ void RenderWidget::SetupShaders() {
   }
   if (!shader_program_->bind()) {
     qDebug() << "Shader Program Binding Error:" << shader_program_->log();
+  }
+
+  light_shader_program_ = new QOpenGLShaderProgram();
+  if (!light_shader_program_->addShaderFromSourceFile(
+          QOpenGLShader::Vertex,
+          QCoreApplication::applicationDirPath() +
+              "/../../src/graphics/shader/light_cube.vs")) {
+    qDebug() << "Vertex Shader Error:" << light_shader_program_->log();
+  }
+
+  if (!light_shader_program_->addShaderFromSourceFile(
+          QOpenGLShader::Fragment,
+          QCoreApplication::applicationDirPath() +
+              "/../../src/graphics/shader/light_cube.fs")) {
+    qDebug() << "Fragment Shader Error:" << light_shader_program_->log();
+  }
+
+  if (!light_shader_program_->link()) {
+    qDebug() << "Shader Program Linking Error:" << light_shader_program_->log();
+  }
+  if (!light_shader_program_->bind()) {
+    qDebug() << "Shader Program Binding Error:" << light_shader_program_->log();
   }
 }
 

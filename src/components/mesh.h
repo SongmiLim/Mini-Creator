@@ -49,7 +49,7 @@ private:
 
   // std::shared_ptr<Material> material_;
   std::vector<glm::vec3> vertices_;
-  int index_count_;
+  size_t index_count_;
 };
 
 } // namespace components
