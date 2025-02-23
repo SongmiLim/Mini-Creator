@@ -11,11 +11,11 @@ namespace ui {
 namespace menu_bar {
 
 EditMenu::EditMenu() : QMenu("&Edit") {
-  SetupActions();
+  LoadActions();
   AddActionsToMenu();
 }
 
-void EditMenu::SetupActions() {}
+void EditMenu::LoadActions() {}
 
 void EditMenu::AddActionsToMenu() {}
 

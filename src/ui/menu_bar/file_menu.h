@@ -18,7 +18,7 @@ private slots:
   void OnImportTriggered();
 
 private:
-  void SetupActions();
+  void LoadActions();
   void AddActionsToMenu();
 
   QAction *new_action_;

@@ -5,7 +5,6 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
-#include <QOpenGLVertexArrayObject>
 
 namespace mini_creator {
 namespace components {
@@ -15,14 +14,17 @@ public:
   Light();
   ~Light();
 
-  void Draw(QOpenGLShaderProgram *shader_program);
+  void Draw(const QMatrix4x4 &view_matrix, const QMatrix4x4 &projection_matrix);
+
   void SetPosition(const QVector3D &position);
   QVector3D GetPosition() const;
 
 private:
-  void Initialize();
+  void BindBuffers();
+  void LoadShaders();
 
-  QVector3D position_;
+  QOpenGLShaderProgram *shader_program_;
+  QVector3D position_ = QVector3D(5.0f, 5.0f, 5.0f);
   QOpenGLBuffer vbo_;
   QOpenGLBuffer ebo_;
 };

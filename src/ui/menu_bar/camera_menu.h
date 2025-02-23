@@ -16,7 +16,7 @@ public:
 private slots:
 
 private:
-  void SetupActions();
+  void LoadActions();
   void AddActionsToMenu();
 };
 

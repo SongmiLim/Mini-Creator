@@ -11,8 +11,7 @@ namespace mini_creator {
 namespace ui {
 namespace widgets {
 
-RenderWidget::RenderWidget(QWidget *parent)
-    : QOpenGLWidget(parent), light_shader_program_(nullptr) {
+RenderWidget::RenderWidget(QWidget *parent) : QOpenGLWidget(parent) {
   camera_ = std::make_shared<components::Camera>();
   light_ = std::make_shared<components::Light>();
 
@@ -24,21 +23,10 @@ RenderWidget::RenderWidget(QWidget *parent)
   setFocusPolicy(Qt::StrongFocus);
   setFocus();
 
-  SetupUI();
+  LoadUi();
 }
 
-void RenderWidget::SetupUI() {
-  toggle_button_ = new QPushButton("Camera Mode: Third Person", this);
-  toggle_button_->setFixedSize(170, 30);
-  toggle_button_->move(this->width() - toggle_button_->width() - 10, 10);
-  connect(toggle_button_, &QPushButton::clicked, this,
-          &RenderWidget::ToggleCameraMode);
-}
-
-void RenderWidget::initializeGL() {
-  initializeOpenGLFunctions();
-  SetupShaders();
-}
+void RenderWidget::initializeGL() { initializeOpenGLFunctions(); }
 
 void RenderWidget::resizeGL(int width, int height) {
   glViewport(0, 0, width, height);
@@ -69,11 +57,7 @@ void RenderWidget::paintGL() {
                 camera_position);
   }
 
-  light_shader_program_->bind();
-  light_shader_program_->setUniformValue("view", camera_->GetViewMatrix());
-  light_shader_program_->setUniformValue("projection",
-                                         camera_->GetProjectionMatrix());
-  light_->Draw(light_shader_program_);
+  light_->Draw(view_matrix, projection_matrix);
 }
 
 void RenderWidget::mouseMoveEvent(QMouseEvent *event) {
@@ -117,27 +101,24 @@ void RenderWidget::keyPressEvent(QKeyEvent *event) {
   }
 }
 
-void RenderWidget::SetupShaders() {
-  light_shader_program_ = new QOpenGLShaderProgram();
-  if (!light_shader_program_->addShaderFromSourceFile(
-          QOpenGLShader::Vertex,
-          QCoreApplication::applicationDirPath() +
-              "/../../src/graphics/shader/light_cube.vs")) {
-    qDebug() << "Vertex Shader Error:" << light_shader_program_->log();
-  }
+void RenderWidget::ToggleCameraMode() {
+  camera_->ToggleMode();
+  UpdateToggleButtonText();
+}
 
-  if (!light_shader_program_->addShaderFromSourceFile(
-          QOpenGLShader::Fragment,
-          QCoreApplication::applicationDirPath() +
-              "/../../src/graphics/shader/light_cube.fs")) {
-    qDebug() << "Fragment Shader Error:" << light_shader_program_->log();
-  }
+void RenderWidget::LoadUi() {
+  toggle_button_ = new QPushButton("Camera Mode: Third Person", this);
+  toggle_button_->setFixedSize(170, 30);
+  toggle_button_->move(this->width() - toggle_button_->width() - 10, 10);
+  connect(toggle_button_, &QPushButton::clicked, this,
+          &RenderWidget::ToggleCameraMode);
+}
 
-  if (!light_shader_program_->link()) {
-    qDebug() << "Shader Program Linking Error:" << light_shader_program_->log();
-  }
-  if (!light_shader_program_->bind()) {
-    qDebug() << "Shader Program Binding Error:" << light_shader_program_->log();
+void RenderWidget::UpdateToggleButtonText() {
+  if (camera_->GetMode() == components::CameraMode::FirstPerson) {
+    toggle_button_->setText("Camera Mode: First Person");
+  } else {
+    toggle_button_->setText("Camera Mode: Third Person");
   }
 }
 
@@ -159,19 +140,6 @@ void RenderWidget::AdjustCameraToModel() {
   }
 
   camera_->FitToBoundingBox(minBound, maxBound);
-}
-
-void RenderWidget::ToggleCameraMode() {
-  camera_->ToggleMode();
-  UpdateToggleButtonText();
-}
-
-void RenderWidget::UpdateToggleButtonText() {
-  if (camera_->GetMode() == components::CameraMode::FirstPerson) {
-    toggle_button_->setText("Camera Mode: First Person");
-  } else {
-    toggle_button_->setText("Camera Mode: Third Person");
-  }
 }
 
 } // namespace widgets

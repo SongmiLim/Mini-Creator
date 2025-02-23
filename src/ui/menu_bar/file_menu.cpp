@@ -11,15 +11,13 @@ namespace ui {
 namespace menu_bar {
 
 FileMenu::FileMenu() : QMenu("&File") {
-  SetupActions();
+  LoadActions();
   AddActionsToMenu();
 }
 
-void FileMenu::SetupActions() {
-  new_action_ = new QAction(
-      QIcon::fromTheme("document-new").pixmap(QSize(16, 16)), "&New", this);
-  import_action_ = new QAction(
-      QIcon::fromTheme("document-open").pixmap(QSize(16, 16)), "&Import", this);
+void FileMenu::LoadActions() {
+  new_action_ = new QAction("&New", this);
+  import_action_ = new QAction("&Import", this);
 
   QMenu::connect(new_action_, &QAction::triggered, this,
                  &FileMenu::OnNewTriggered);

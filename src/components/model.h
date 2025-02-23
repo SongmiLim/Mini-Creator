@@ -24,6 +24,7 @@ public:
   void SetTranslation(const glm::vec3 &translation);
   void SetRotation(const glm::vec3 &rotation);
   void SetScale(const glm::vec3 &scale);
+
   const glm::vec3 &GetTranslation() const { return translation_; }
   const glm::vec3 &GetRotation() const { return rotation_; }
   const glm::vec3 &GetScale() const { return scale_; }
@@ -36,12 +37,12 @@ public:
             const QVector3D &light_position, const QVector3D &camera_position);
 
 private:
-  void SetupShaders();
+  void LoadShaders();
 
   QOpenGLShaderProgram *shader_program_;
+  std::vector<std::shared_ptr<Mesh>> meshes_;
 
   QString name_;
-  std::vector<std::shared_ptr<Mesh>> meshes_;
   glm::vec3 translation_;
   glm::vec3 rotation_;
   glm::vec3 scale_;

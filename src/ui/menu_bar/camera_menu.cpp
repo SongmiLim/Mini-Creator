@@ -11,11 +11,11 @@ namespace ui {
 namespace menu_bar {
 
 CameraMenu::CameraMenu() : QMenu("&Camera") {
-  SetupActions();
+  LoadActions();
   AddActionsToMenu();
 }
 
-void CameraMenu::SetupActions() {}
+void CameraMenu::LoadActions() {}
 
 void CameraMenu::AddActionsToMenu() {}
 

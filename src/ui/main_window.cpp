@@ -16,23 +16,23 @@ MainWindow::MainWindow()
   showMaximized();
 }
 
-void MainWindow::InitializeUI() {
-  SetupMenuBar();
-  SetupToolBar();
-  SetupCentralWidget();
+void MainWindow::LoadUi() {
+  LoadMenuBar();
+  // LoadToolBar();
+  LoadCentralWidget();
 }
 
-void MainWindow::SetupMenuBar() {
+void MainWindow::LoadMenuBar() {
   menu_bar_ = new MenuBar();
   QMainWindow::setMenuBar(menu_bar_);
 }
 
-void MainWindow::SetupToolBar() {
+void MainWindow::LoadToolBar() {
   tool_bar_ = new ToolBar(this);
   QMainWindow::addToolBar(tool_bar_);
 }
 
-void MainWindow::SetupCentralWidget() {
+void MainWindow::LoadCentralWidget() {
   QWidget *central_widget = new QWidget;
   QMainWindow::setCentralWidget(central_widget);
 
@@ -47,7 +47,7 @@ void MainWindow::SetupCentralWidget() {
 }
 
 void MainWindow::Show() {
-  InitializeUI();
+  LoadUi();
   QMainWindow::show();
 }
 

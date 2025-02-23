@@ -9,7 +9,7 @@ namespace components {
 Model::Model(const QString &name)
     : name_(name), translation_(0.0f), rotation_(0.0f), scale_(1.0f) {
   shader_program_ = new QOpenGLShaderProgram();
-  SetupShaders();
+  LoadShaders();
 }
 
 Model::~Model() { meshes_.clear(); }
@@ -63,7 +63,7 @@ void Model::Draw(const QMatrix4x4 &view_matrix,
   shader_program_->release();
 }
 
-void Model::SetupShaders() {
+void Model::LoadShaders() {
   shader_program_ = new QOpenGLShaderProgram();
   if (!shader_program_->addShaderFromSourceFile(
           QOpenGLShader::Vertex, QCoreApplication::applicationDirPath() +

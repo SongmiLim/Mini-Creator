@@ -21,10 +21,10 @@ public:
   void Show();
 
 private:
-  void InitializeUI();
-  void SetupMenuBar();
-  void SetupToolBar();
-  void SetupCentralWidget();
+  void LoadUi();
+  void LoadMenuBar();
+  void LoadToolBar();
+  void LoadCentralWidget();
 
   MenuBar *menu_bar_;
   ToolBar *tool_bar_;

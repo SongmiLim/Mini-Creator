@@ -11,11 +11,11 @@ namespace ui {
 namespace menu_bar {
 
 AnimationMenu::AnimationMenu() : QMenu("&Animation") {
-  SetupActions();
+  LoadActions();
   AddActionsToMenu();
 }
 
-void AnimationMenu::SetupActions() {}
+void AnimationMenu::LoadActions() {}
 
 void AnimationMenu::AddActionsToMenu() {}
 

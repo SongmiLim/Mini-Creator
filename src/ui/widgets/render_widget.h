@@ -40,15 +40,12 @@ private slots:
   void ToggleCameraMode();
 
 private:
-  void SetupShaders();
-  void AdjustCameraToModel();
-
-  void SetupUI();
+  void LoadUi();
   void UpdateToggleButtonText();
 
-  QPushButton *toggle_button_;
+  void AdjustCameraToModel();
 
-  QOpenGLShaderProgram *light_shader_program_;
+  QPushButton *toggle_button_;
 
   std::shared_ptr<components::Camera> camera_;
   std::shared_ptr<components::Light> light_;
