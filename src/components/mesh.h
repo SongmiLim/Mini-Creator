@@ -10,6 +10,8 @@
 #include <QString>
 #include <glm/glm.hpp>
 
+#include "components/shader.h"
+
 namespace mini_creator {
 namespace components {
 
@@ -33,7 +35,7 @@ public:
 
   const std::vector<glm::vec3> &GetVertices() const { return vertices_; }
 
-  void Draw(QOpenGLShaderProgram *shader_program);
+  void Draw(std::shared_ptr<Shader> shader);
 
 private:
   QOpenGLBuffer vbo_vertices_;

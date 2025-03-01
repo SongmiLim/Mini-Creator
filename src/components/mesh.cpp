@@ -7,7 +7,7 @@ namespace mini_creator {
 namespace components {
 
 Mesh::Mesh() : ebo_(QOpenGLBuffer::IndexBuffer) {
-  QOpenGLFunctions::initializeOpenGLFunctions();
+  initializeOpenGLFunctions();
   index_count_ = 0;
 }
 
@@ -123,56 +123,38 @@ void Mesh::SetSpecularColor(const glm::vec3 &color) { specular_color_ = color; }
 void Mesh::SetAmbientColor(const glm::vec3 &color) { ambient_color_ = color; }
 void Mesh::SetShininess(float shininess) { shininess_ = shininess; }
 
-void Mesh::Draw(QOpenGLShaderProgram *shader_program) {
-  if (!shader_program) {
+void Mesh::Draw(std::shared_ptr<Shader> shader) {
+  if (!shader) {
     qDebug() << "Mesh::Draw - Shader program is null.";
     return;
   }
 
-  shader_program->setUniformValue("material.diffuse", diffuse_color_.r,
-                                  diffuse_color_.g, diffuse_color_.b);
-  shader_program->setUniformValue("material.specular", specular_color_.r,
-                                  specular_color_.g, specular_color_.b);
-  shader_program->setUniformValue("material.ambient", ambient_color_.r,
-                                  ambient_color_.g, ambient_color_.b);
-  shader_program->setUniformValue("material.shininess", shininess_);
+  shader->SetUniform("material.diffuse", diffuse_color_);
+  shader->SetUniform("material.specular", specular_color_);
+  shader->SetUniform("material.ambient", ambient_color_);
+  shader->SetUniform("material.shininess", shininess_);
 
   if (texture_) {
     glActiveTexture(GL_TEXTURE0);
     texture_->bind();
-    shader_program->setUniformValue("textureMap", 0);
+    shader->SetUniform("textureMap", 0);
   } else {
     qDebug() << "Warning: No texture bound! This may cause rendering issues.";
   }
 
   if (vbo_vertices_.isCreated()) {
     vbo_vertices_.bind();
-    int vertex_location = shader_program->attributeLocation("position");
-    if (vertex_location != -1) {
-      shader_program->enableAttributeArray(vertex_location);
-      shader_program->setAttributeBuffer(vertex_location, GL_FLOAT, 0, 3,
-                                         sizeof(glm::vec3));
-    }
+    shader->SetAttribute("position", GL_FLOAT, 0, 3, sizeof(glm::vec3));
   }
 
   if (vbo_normals_.isCreated()) {
     vbo_normals_.bind();
-    int normalLocation = shader_program->attributeLocation("normal");
-    if (normalLocation != -1) {
-      shader_program->enableAttributeArray(normalLocation);
-      shader_program->setAttributeBuffer(normalLocation, GL_FLOAT, 0, 3,
-                                         sizeof(glm::vec3));
-    }
+    shader->SetAttribute("normal", GL_FLOAT, 0, 3, sizeof(glm::vec3));
   }
 
   if (vbo_tex_coords_.isCreated()) {
     vbo_tex_coords_.bind();
-    int texCoordLocation = shader_program->attributeLocation("texCoord");
-    if (texCoordLocation != -1) {
-      shader_program->enableAttributeArray(texCoordLocation);
-      shader_program->setAttributeBuffer(texCoordLocation, GL_FLOAT, 0, 2,
-                                         sizeof(glm::vec2));
-    }
+    shader->SetAttribute("texCoord", GL_FLOAT, 0, 2, sizeof(glm::vec2));
   }
 
   if (ebo_.isCreated()) {

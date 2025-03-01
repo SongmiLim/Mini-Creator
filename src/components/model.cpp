@@ -8,8 +8,11 @@ namespace components {
 
 Model::Model(const QString &name)
     : name_(name), translation_(0.0f), rotation_(0.0f), scale_(1.0f) {
-  shader_program_ = new QOpenGLShaderProgram();
-  LoadShaders();
+  shader_ = std::make_shared<Shader>();
+  shader_->Load(QCoreApplication::applicationDirPath() +
+                    "/../../src/graphics/shader/mesh.vs",
+                QCoreApplication::applicationDirPath() +
+                    "/../../src/graphics/shader/mesh.fs");
 }
 
 Model::~Model() { meshes_.clear(); }
@@ -33,12 +36,10 @@ void Model::Draw(const QMatrix4x4 &view_matrix,
                  const QMatrix4x4 &projection_matrix,
                  const QVector3D &light_position,
                  const QVector3D &camera_position) {
-  if (!shader_program_) {
+  if (!shader_) {
     qDebug() << "Shader program is null for model:" << name_;
     return;
   }
-
-  shader_program_->bind();
 
   QMatrix4x4 model_matrix;
   model_matrix.setToIdentity();
@@ -48,42 +49,17 @@ void Model::Draw(const QMatrix4x4 &view_matrix,
   model_matrix.rotate(rotation_.z, QVector3D(0.0f, 0.0f, 1.0f));
   model_matrix.scale(scale_.x, scale_.y, scale_.z);
 
-  shader_program_->setUniformValue("model", model_matrix);
-  shader_program_->setUniformValue("view", view_matrix);
-  shader_program_->setUniformValue("projection", projection_matrix);
-  shader_program_->setUniformValue("lightPos", light_position);
-  shader_program_->setUniformValue("cameraPos", camera_position);
+  shader_->Use();
+  shader_->SetUniform("model", model_matrix);
+  shader_->SetUniform("view", view_matrix);
+  shader_->SetUniform("projection", projection_matrix);
+  shader_->SetUniform("lightPos", light_position);
+  shader_->SetUniform("cameraPos", camera_position);
 
   for (const auto &mesh : meshes_) {
     if (mesh) {
-      mesh->Draw(shader_program_);
+      mesh->Draw(shader_);
     }
-  }
-
-  shader_program_->release();
-}
-
-void Model::LoadShaders() {
-  shader_program_ = new QOpenGLShaderProgram();
-  if (!shader_program_->addShaderFromSourceFile(
-          QOpenGLShader::Vertex, QCoreApplication::applicationDirPath() +
-                                     "/../../src/graphics/shader/mesh.vs")) {
-    qDebug() << QCoreApplication::applicationDirPath() +
-                    "/../../src/graphics/shader/mesh.vs";
-    qDebug() << "Vertex Shader Error:" << shader_program_->log();
-  }
-
-  if (!shader_program_->addShaderFromSourceFile(
-          QOpenGLShader::Fragment, QCoreApplication::applicationDirPath() +
-                                       "/../../src/graphics/shader/mesh.fs")) {
-    qDebug() << "Fragment Shader Error:" << shader_program_->log();
-  }
-
-  if (!shader_program_->link()) {
-    qDebug() << "Shader Program Linking Error:" << shader_program_->log();
-  }
-  if (!shader_program_->bind()) {
-    qDebug() << "Shader Program Binding Error:" << shader_program_->log();
   }
 }
 

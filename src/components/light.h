@@ -1,10 +1,14 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
+#include <memory>
+
 #include <QMatrix4x4>
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
+
+#include "components/shader.h"
 
 namespace mini_creator {
 namespace components {
@@ -23,7 +27,7 @@ private:
   void BindBuffers();
   void LoadShaders();
 
-  QOpenGLShaderProgram *shader_program_;
+  std::shared_ptr<Shader> shader_;
   QVector3D position_ = QVector3D(5.0f, 5.0f, 5.0f);
   QOpenGLBuffer vbo_;
   QOpenGLBuffer ebo_;

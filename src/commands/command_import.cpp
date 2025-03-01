@@ -31,6 +31,7 @@ void CommandImport::Execute(const QString &file_path) {
   std::shared_ptr<components::Model> model =
       std::make_shared<components::Model>(file_path);
   ProcessNode(scene->mRootNode, scene, model);
+
   core::ModelManager::Instance().AddModel(model);
 }
 
@@ -55,24 +56,29 @@ CommandImport::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
 
   std::vector<glm::vec3> vertices(mesh->mNumVertices);
   std::vector<glm::vec3> normals(mesh->mNumVertices);
-  std::vector<uint32_t> indices(mesh->mNumFaces * 3);
+  std::vector<unsigned int> indices(mesh->mNumFaces * 3);
   std::vector<glm::vec2> tex_coords(mesh->mNumVertices);
 
   for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
     vertices[i] = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y,
                             mesh->mVertices[i].z);
-
-    normals[i] = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y,
-                           mesh->mNormals[i].z);
-
-    tex_coords[i] = glm::vec2(mesh->mTextureCoords[0][i].x,
-                              1.0f - mesh->mTextureCoords[0][i].y);
+    if (mesh->HasNormals()) {
+      normals[i] = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y,
+                             mesh->mNormals[i].z);
+    }
+    if (mesh->mTextureCoords[0]) {
+      tex_coords[i] = glm::vec2(mesh->mTextureCoords[0][i].x,
+                                1.0f - mesh->mTextureCoords[0][i].y);
+    } else {
+      tex_coords.push_back(glm::vec2(0.0f, 0.0f));
+    }
   }
 
   for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
-    indices[3 * i] = mesh->mFaces[i].mIndices[0];
-    indices[3 * i + 1] = mesh->mFaces[i].mIndices[1];
-    indices[3 * i + 2] = mesh->mFaces[i].mIndices[2];
+    aiFace face = mesh->mFaces[i];
+    for (unsigned int j = 0; j < face.mNumIndices; j++) {
+      indices.push_back(face.mIndices[j]);
+    }
   }
 
   new_mesh->SetVertices(vertices);

@@ -9,8 +9,11 @@ namespace components {
 Light::Light() : ebo_(QOpenGLBuffer::IndexBuffer) {
   initializeOpenGLFunctions();
 
-  shader_program_ = new QOpenGLShaderProgram();
-  LoadShaders();
+  shader_ = std::make_shared<Shader>();
+  shader_->Load(QCoreApplication::applicationDirPath() +
+                    "/../../src/graphics/shader/light_cube.vs",
+                QCoreApplication::applicationDirPath() +
+                    "/../../src/graphics/shader/light_cube.fs");
   BindBuffers();
 }
 
@@ -21,7 +24,7 @@ Light::~Light() {
 
 void Light::Draw(const QMatrix4x4 &view_matrix,
                  const QMatrix4x4 &projection_matrix) {
-  if (!shader_program_)
+  if (!shader_)
     return;
 
   QMatrix4x4 model_matrix;
@@ -29,21 +32,16 @@ void Light::Draw(const QMatrix4x4 &view_matrix,
   model_matrix.translate(position_);
   model_matrix.scale(0.5f);
 
-  shader_program_->bind();
+  shader_->Use();
   vbo_.bind();
   ebo_.bind();
 
-  shader_program_->setUniformValue("model", model_matrix);
-  shader_program_->setUniformValue("view", view_matrix);
-  shader_program_->setUniformValue("projection", projection_matrix);
+  shader_->SetUniform("model", model_matrix);
+  shader_->SetUniform("view", view_matrix);
+  shader_->SetUniform("projection", projection_matrix);
 
-  int vertex_location = shader_program_->attributeLocation("position");
-  if (vertex_location != -1) {
-    shader_program_->enableAttributeArray(vertex_location);
-    shader_program_->setAttributeBuffer(vertex_location, GL_FLOAT, 0, 3,
-                                        sizeof(float));
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
-  }
+  shader_->SetAttribute("position", GL_FLOAT, 0, 3, sizeof(float));
+  glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
 
   ebo_.release();
   vbo_.release();
@@ -79,30 +77,6 @@ void Light::BindBuffers() {
 
   vbo_.release();
   ebo_.release();
-}
-
-void Light::LoadShaders() {
-  shader_program_ = new QOpenGLShaderProgram();
-  if (!shader_program_->addShaderFromSourceFile(
-          QOpenGLShader::Vertex,
-          QCoreApplication::applicationDirPath() +
-              "/../../src/graphics/shader/light_cube.vs")) {
-    qDebug() << "Vertex Shader Error:" << shader_program_->log();
-  }
-
-  if (!shader_program_->addShaderFromSourceFile(
-          QOpenGLShader::Fragment,
-          QCoreApplication::applicationDirPath() +
-              "/../../src/graphics/shader/light_cube.fs")) {
-    qDebug() << "Fragment Shader Error:" << shader_program_->log();
-  }
-
-  if (!shader_program_->link()) {
-    qDebug() << "Shader Program Linking Error:" << shader_program_->log();
-  }
-  if (!shader_program_->bind()) {
-    qDebug() << "Shader Program Binding Error:" << shader_program_->log();
-  }
 }
 
 } // namespace components

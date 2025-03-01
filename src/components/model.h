@@ -9,7 +9,9 @@
 #include <QString>
 #include <glm/glm.hpp>
 
+#include "components/shader.h"
 #include "mesh.h"
+
 
 namespace mini_creator {
 namespace components {
@@ -37,9 +39,7 @@ public:
             const QVector3D &light_position, const QVector3D &camera_position);
 
 private:
-  void LoadShaders();
-
-  QOpenGLShaderProgram *shader_program_;
+  std::shared_ptr<Shader> shader_;
   std::vector<std::shared_ptr<Mesh>> meshes_;
 
   QString name_;
