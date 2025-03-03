@@ -59,8 +59,9 @@ void RenderWidget::paintGL() {
 
   light_->Draw(view_matrix, projection_matrix);
 
-  if (selected_model_) {
-    selected_model_->DrawBoundingBox(view_matrix, projection_matrix);
+  auto selected_model = core::ModelManager::GetSelectedModel();
+  if (selected_model) {
+    selected_model->DrawBoundingBox(view_matrix, projection_matrix);
   }
 }
 
@@ -85,10 +86,8 @@ void RenderWidget::mousePressEvent(QMouseEvent *event) {
     auto selected_model =
         graphics::physics::Raycast::Execute(origin, direction);
     if (selected_model) {
-      selected_model_ = selected_model;
-      core::ModelManager::SetSelectedModel(selected_model_);
+      core::ModelManager::SetSelectedModel(selected_model);
     } else {
-      selected_model_ = nullptr;
       core::ModelManager::SetSelectedModel(nullptr);
     }
     update();

@@ -96,8 +96,16 @@ void Model::DrawBoundingBox(const QMatrix4x4 &view_matrix,
   }
   UpdateBoundingBox();
 
+  QMatrix4x4 model_matrix;
+  model_matrix.setToIdentity();
+  model_matrix.translate(translation_.x, translation_.y, translation_.z);
+  model_matrix.rotate(rotation_.x, QVector3D(1.0f, 0.0f, 0.0f));
+  model_matrix.rotate(rotation_.y, QVector3D(0.0f, 1.0f, 0.0f));
+  model_matrix.rotate(rotation_.z, QVector3D(0.0f, 0.0f, 1.0f));
+  model_matrix.scale(scale_.x, scale_.y, scale_.z);
+
   bounding_box_shader_->Use();
-  bounding_box_shader_->SetUniform("model", QMatrix4x4());
+  bounding_box_shader_->SetUniform("model", model_matrix);
   bounding_box_shader_->SetUniform("view", view_matrix);
   bounding_box_shader_->SetUniform("projection", projection_matrix);
 

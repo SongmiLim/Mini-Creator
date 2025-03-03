@@ -47,10 +47,9 @@ private:
 
   std::shared_ptr<graphics::Camera> camera_;
   std::shared_ptr<graphics::Light> light_;
-  std::shared_ptr<graphics::Model> selected_model_; // Reintroduce this line
 
   bool is_mouse_pressed_ = false;
-  bool is_wheel_button_pressed_ = false; // Add this line
+  bool is_wheel_button_pressed_ = false;
   QPoint last_mouse_pos_;
 };
 
