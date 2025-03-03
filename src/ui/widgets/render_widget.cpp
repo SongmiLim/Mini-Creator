@@ -82,12 +82,12 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *event) {
 
 void RenderWidget::mousePressEvent(QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
-    QVector3D origin = camera_->GetPosition();
-    QVector3D direction = camera_->CalculateWorldRayFromScreenPos(
+    QVector3D camera_position = camera_->GetPosition();
+    QVector3D camera_direction = camera_->CalculateWorldRayFromScreenPos(
         event->pos(), this->width(), this->height());
 
     auto selected_model =
-        graphics::physics::Raycast::Execute(origin, direction);
+        graphics::physics::Raycast::Execute(camera_position, camera_direction);
     if (selected_model) {
       core::ModelManager::SetSelectedModel(selected_model);
     } else {

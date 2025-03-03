@@ -4,7 +4,6 @@
 #include <QVector3D>
 #include <memory>
 
-
 #include "graphics/model.h"
 
 namespace mini_creator {
@@ -13,8 +12,8 @@ namespace physics {
 
 class Raycast {
 public:
-  static std::shared_ptr<graphics::Model> Execute(const QVector3D &origin,
-                                                  const QVector3D &direction);
+  static std::shared_ptr<graphics::Model>
+  Execute(const QVector3D &camera_position, const QVector3D &camera_direction);
 
 private:
   static bool RayIntersectsBox(const glm::vec3 &ray_origin,

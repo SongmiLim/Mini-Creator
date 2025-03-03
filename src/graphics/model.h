@@ -9,10 +9,8 @@
 #include <QString>
 #include <glm/glm.hpp>
 
-
 #include "graphics/mesh.h"
 #include "graphics/shader_program.h"
-
 
 namespace mini_creator {
 namespace graphics {

@@ -10,8 +10,9 @@ namespace mini_creator {
 namespace graphics {
 namespace physics {
 
-std::shared_ptr<graphics::Model> Raycast::Execute(const QVector3D &origin,
-                                                  const QVector3D &direction) {
+std::shared_ptr<graphics::Model>
+Raycast::Execute(const QVector3D &camera_position,
+                 const QVector3D &camera_direction) {
   std::shared_ptr<graphics::Model> closest_model = nullptr;
   float closest_distance = std::numeric_limits<float>::max();
 
@@ -20,12 +21,25 @@ std::shared_ptr<graphics::Model> Raycast::Execute(const QVector3D &origin,
     glm::vec3 min_bound = model->GetMinBound();
     glm::vec3 max_bound = model->GetMaxBound();
 
-    glm::vec3 ray_origin(origin.x(), origin.y(), origin.z());
-    glm::vec3 ray_direction(direction.x(), direction.y(), direction.z());
+    QMatrix4x4 model_matrix;
+    model_matrix.setToIdentity();
+    model_matrix.translate(model->GetTranslation().x, model->GetTranslation().y,
+                           model->GetTranslation().z);
+    model_matrix.rotate(model->GetRotation().x, QVector3D(1.0f, 0.0f, 0.0f));
+    model_matrix.rotate(model->GetRotation().y, QVector3D(0.0f, 1.0f, 0.0f));
+    model_matrix.rotate(model->GetRotation().z, QVector3D(0.0f, 0.0f, 1.0f));
+    model_matrix.scale(model->GetScale().x, model->GetScale().y,
+                       model->GetScale().z);
+
+    QVector3D ray_origin = model_matrix.inverted() * camera_position;
+    QVector3D ray_direction =
+    (model_matrix.inverted() * QVector4D(camera_direction, 0.0)).toVector3D();
 
     float tmin, tmax;
-    if (RayIntersectsBox(ray_origin, ray_direction, min_bound, max_bound, tmin,
-                         tmax)) {
+    if (RayIntersectsBox(
+            glm::vec3(ray_origin.x(), ray_origin.y(), ray_origin.z()),
+            glm::vec3(ray_direction.x(), ray_direction.y(), ray_direction.z()),
+            min_bound, max_bound, tmin, tmax)) {
       if (tmin < closest_distance) {
         closest_distance = tmin;
         closest_model = model;
