@@ -10,9 +10,11 @@
 
 namespace mini_creator {
 namespace commands {
-QString CommandImport::file_path_ = "";
 
 void CommandImport::Execute(const QString &file_path) {
+  progress_value_ = 10;
+  emit ProgressUpdated(progress_value_);
+
   file_path_ = file_path;
 
   Assimp::Importer importer;
@@ -27,9 +29,10 @@ void CommandImport::Execute(const QString &file_path) {
   }
 
   qDebug() << "Successfully loaded model:" << file_path;
+  progress_value_ = 50;
+  emit ProgressUpdated(progress_value_);
 
-  std::shared_ptr<graphics::Model> model =
-      std::make_shared<graphics::Model>(file_path);
+  auto model = std::make_shared<graphics::Model>(file_path);
   ProcessNode(scene->mRootNode, scene, model);
 
   core::ModelManager::AddModel(model);
@@ -40,9 +43,12 @@ void CommandImport::ProcessNode(aiNode *node, const aiScene *scene,
   for (unsigned int i = 0; i < node->mNumMeshes; i++) {
     auto meshIndex = node->mMeshes[i];
     auto mesh = scene->mMeshes[meshIndex];
-    std::shared_ptr<graphics::Mesh> new_mesh = ProcessMesh(mesh, scene);
+    auto new_mesh = ProcessMesh(mesh, scene);
     model->AddMesh(new_mesh);
   }
+
+  progress_value_ += (50 / scene->mRootNode->mNumChildren);
+  emit ProgressUpdated(progress_value_);
 
   for (unsigned int i = 0; i < node->mNumChildren; i++) {
     ProcessNode(node->mChildren[i], scene, model);
@@ -51,7 +57,7 @@ void CommandImport::ProcessNode(aiNode *node, const aiScene *scene,
 
 std::shared_ptr<graphics::Mesh>
 CommandImport::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
-  std::shared_ptr<graphics::Mesh> new_mesh = std::make_shared<graphics::Mesh>();
+  auto new_mesh = std::make_shared<graphics::Mesh>();
 
   std::vector<glm::vec3> vertices(mesh->mNumVertices);
   std::vector<glm::vec3> normals(mesh->mNumVertices);
@@ -101,7 +107,6 @@ CommandImport::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
     aiString texturePath;
     if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) ==
         AI_SUCCESS) {
-
       QString objDirectory = QFileInfo(file_path_).absolutePath();
       QString relativeTexturePath = QString::fromStdString(texturePath.C_Str());
       QString absoluteTexturePath = objDirectory + "/" + relativeTexturePath;
@@ -130,19 +135,16 @@ CommandImport::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
 
 void CommandImport::ImportTestCubeModel() {
   std::vector<glm::vec3> cubeVertices = {
-      {-0.5f, -0.5f, -0.5f}, {0.5f, -0.5f, -0.5f},
-      {0.5f, 0.5f, -0.5f},   {-0.5f, 0.5f, -0.5f},
-
-      {-0.5f, -0.5f, 0.5f},  {0.5f, -0.5f, 0.5f},
+      {-0.5f, -0.5f, -0.5f}, {0.5f, -0.5f, -0.5f}, {0.5f, 0.5f, -0.5f},
+      {-0.5f, 0.5f, -0.5f},  {-0.5f, -0.5f, 0.5f}, {0.5f, -0.5f, 0.5f},
       {0.5f, 0.5f, 0.5f},    {-0.5f, 0.5f, 0.5f}};
 
   std::vector<uint32_t> cubeIndices = {0, 1, 2, 2, 3, 0, 4, 5, 6, 6, 7, 4,
                                        0, 4, 7, 7, 3, 0, 1, 5, 6, 6, 2, 1,
                                        0, 1, 5, 5, 4, 0, 3, 2, 6, 6, 7, 3};
 
-  std::shared_ptr<graphics::Model> model =
-      std::make_shared<graphics::Model>("TestCube");
-  std::shared_ptr<graphics::Mesh> mesh = std::make_shared<graphics::Mesh>();
+  auto model = std::make_shared<graphics::Model>("TestCube");
+  auto mesh = std::make_shared<graphics::Mesh>();
   mesh->SetVertices(cubeVertices);
   mesh->SetIndices(cubeIndices);
   model->AddMesh(mesh);

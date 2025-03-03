@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 #include <QOpenGLFunctions>
 #include <QOpenGLWidget>
+#include <QProgressBar>
 #include <QPushButton>
 #include <QWheelEvent>
 
@@ -36,14 +37,15 @@ protected:
 
 private slots:
   void ToggleCameraMode();
+  void UpdateProgressBar(int value);
 
 private:
   void LoadUi();
   void UpdateToggleButtonText();
-
   void AdjustCameraToModel();
 
   QPushButton *toggle_button_;
+  QProgressBar *progress_bar_;
 
   std::shared_ptr<graphics::Camera> camera_;
   std::shared_ptr<graphics::Light> light_;

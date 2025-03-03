@@ -38,7 +38,7 @@ void FileMenu::OnImportTriggered() {
       "3D Model Files (*.obj *.fbx);;OBJ Files (*.obj);;FBX Files (*.fbx)");
 
   if (!fileName.isEmpty()) {
-    commands::CommandImport::Execute(fileName);
+    commands::CommandImport::instance().Execute(fileName);
   }
 }
 

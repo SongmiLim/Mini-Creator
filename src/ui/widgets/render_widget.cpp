@@ -1,8 +1,9 @@
 #include "render_widget.h"
 
 #include <QDebug>
-#include <Qtimer>
+#include <QTimer>
 
+#include "commands/command_import.h"
 #include "core/model_manager.h"
 #include "graphics/camera_mode.h"
 #include "graphics/physics/raycast.h"
@@ -35,6 +36,8 @@ void RenderWidget::resizeGL(int width, int height) {
   camera_->SetPerspective(45.0f, float(width) / height, 0.1f, 1000.0f);
 
   toggle_button_->move(this->width() - toggle_button_->width() - 10, 10);
+  progress_bar_->move((this->width() / 2) - progress_bar_->width() / 2,
+                      (this->height() / 2) - progress_bar_->height() / 2);
 }
 
 void RenderWidget::paintGL() {
@@ -109,7 +112,6 @@ void RenderWidget::wheelEvent(QWheelEvent *event) {
 }
 
 void RenderWidget::keyPressEvent(QKeyEvent *event) {
-
   QString key = event->text().toUpper();
   if (key == "F") {
     ToggleCameraMode();
@@ -123,12 +125,43 @@ void RenderWidget::ToggleCameraMode() {
   UpdateToggleButtonText();
 }
 
+void RenderWidget::UpdateProgressBar(int value) {
+  progress_bar_->show();
+
+  progress_bar_->setValue(value);
+  if (value >= 100) {
+    progress_bar_->hide();
+  }
+}
+
 void RenderWidget::LoadUi() {
   toggle_button_ = new QPushButton("Camera Mode: Third Person", this);
   toggle_button_->setFixedSize(170, 30);
   toggle_button_->move(this->width() - toggle_button_->width() - 10, 10);
   connect(toggle_button_, &QPushButton::clicked, this,
           &RenderWidget::ToggleCameraMode);
+
+  progress_bar_ = new QProgressBar(this);
+  progress_bar_->setRange(0, 100);
+  progress_bar_->setValue(0);
+  progress_bar_->setFixedSize(600, 60);
+  progress_bar_->move((this->width() / 2) - progress_bar_->width() / 2,
+                      (this->height() / 2) - progress_bar_->height() / 2);
+  progress_bar_->setStyleSheet("QProgressBar {"
+                               "  background-color: rgba(211, 211, 211, 180);"
+                               "  color: black;"
+                               "  border-radius: 5px;"
+                               "  text-align: center;"
+                               "}"
+                               "QProgressBar::chunk {"
+                               "  background-color: rgba(74, 144, 226, 220);"
+                               "  width: 10px;"
+                               "}");
+
+  progress_bar_->hide();
+  connect(&commands::CommandImport::instance(),
+          &commands::CommandImport::ProgressUpdated, this,
+          &RenderWidget::UpdateProgressBar);
 }
 
 void RenderWidget::UpdateToggleButtonText() {
