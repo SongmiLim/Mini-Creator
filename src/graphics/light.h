@@ -8,10 +8,10 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 
-#include "components/shader.h"
+#include "graphics/shader_program.h"
 
 namespace mini_creator {
-namespace components {
+namespace graphics {
 
 class Light : protected QOpenGLFunctions {
 public:
@@ -27,13 +27,13 @@ private:
   void BindBuffers();
   void LoadShaders();
 
-  std::shared_ptr<Shader> shader_;
+  std::shared_ptr<ShaderProgram> shader_;
   QVector3D position_ = QVector3D(5.0f, 5.0f, 5.0f);
   QOpenGLBuffer vbo_;
   QOpenGLBuffer ebo_;
 };
 
-} // namespace components
+} // namespace graphics
 } // namespace mini_creator
 
 #endif // LIGHT_H

@@ -8,12 +8,12 @@ ModelManager &ModelManager::Instance() {
   return instance;
 }
 
-void ModelManager::AddModel(std::shared_ptr<components::Model> model) {
+void ModelManager::AddModel(std::shared_ptr<graphics::Model> model) {
   models_.push_back(model);
   is_bounding_box_changed = true;
 }
 
-std::shared_ptr<components::Model>
+std::shared_ptr<graphics::Model>
 ModelManager::GetModel(const QString &name) const {
   for (const auto &model : models_) {
     if (model->GetName() == name) {
@@ -23,7 +23,7 @@ ModelManager::GetModel(const QString &name) const {
   return nullptr;
 }
 
-const std::vector<std::shared_ptr<components::Model>> &
+const std::vector<std::shared_ptr<graphics::Model>> &
 ModelManager::GetAllModels() const {
   return models_;
 }

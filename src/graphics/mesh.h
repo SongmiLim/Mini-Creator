@@ -10,10 +10,10 @@
 #include <QString>
 #include <glm/glm.hpp>
 
-#include "components/shader.h"
+#include "graphics/shader_program.h"
 
 namespace mini_creator {
-namespace components {
+namespace graphics {
 
 class Mesh : protected QOpenGLFunctions {
 public:
@@ -35,7 +35,7 @@ public:
 
   const std::vector<glm::vec3> &GetVertices() const { return vertices_; }
 
-  void Draw(std::shared_ptr<Shader> shader);
+  void Draw(std::shared_ptr<ShaderProgram> shader);
 
 private:
   QOpenGLBuffer vbo_vertices_;
@@ -54,7 +54,7 @@ private:
   size_t index_count_;
 };
 
-} // namespace components
+} // namespace graphics
 } // namespace mini_creator
 
 #endif // MESH_H

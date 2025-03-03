@@ -4,15 +4,15 @@
 #include <QDebug>
 
 namespace mini_creator {
-namespace components {
+namespace graphics {
 
 Model::Model(const QString &name)
     : name_(name), translation_(0.0f), rotation_(0.0f), scale_(1.0f) {
-  shader_ = std::make_shared<Shader>();
-  shader_->Load(QCoreApplication::applicationDirPath() +
-                    "/../../src/graphics/shader/mesh.vs",
-                QCoreApplication::applicationDirPath() +
-                    "/../../src/graphics/shader/mesh.fs");
+  shader_program_ = std::make_shared<ShaderProgram>();
+  shader_program_->Load(QCoreApplication::applicationDirPath() +
+                            "/../../src/graphics/shader/mesh.vs",
+                        QCoreApplication::applicationDirPath() +
+                            "/../../src/graphics/shader/mesh.fs");
 }
 
 Model::~Model() { meshes_.clear(); }
@@ -36,8 +36,8 @@ void Model::Draw(const QMatrix4x4 &view_matrix,
                  const QMatrix4x4 &projection_matrix,
                  const QVector3D &light_position,
                  const QVector3D &camera_position) {
-  if (!shader_) {
-    qDebug() << "Shader program is null for model:" << name_;
+  if (!shader_program_) {
+    qDebug() << "ShaderProgram program is null for model:" << name_;
     return;
   }
 
@@ -49,19 +49,19 @@ void Model::Draw(const QMatrix4x4 &view_matrix,
   model_matrix.rotate(rotation_.z, QVector3D(0.0f, 0.0f, 1.0f));
   model_matrix.scale(scale_.x, scale_.y, scale_.z);
 
-  shader_->Use();
-  shader_->SetUniform("model", model_matrix);
-  shader_->SetUniform("view", view_matrix);
-  shader_->SetUniform("projection", projection_matrix);
-  shader_->SetUniform("lightPos", light_position);
-  shader_->SetUniform("cameraPos", camera_position);
+  shader_program_->Use();
+  shader_program_->SetUniform("model", model_matrix);
+  shader_program_->SetUniform("view", view_matrix);
+  shader_program_->SetUniform("projection", projection_matrix);
+  shader_program_->SetUniform("lightPos", light_position);
+  shader_program_->SetUniform("cameraPos", camera_position);
 
   for (const auto &mesh : meshes_) {
     if (mesh) {
-      mesh->Draw(shader_);
+      mesh->Draw(shader_program_);
     }
   }
 }
 
-} // namespace components
+} // namespace graphics
 } // namespace mini_creator

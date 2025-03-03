@@ -9,12 +9,11 @@
 #include <QString>
 #include <glm/glm.hpp>
 
-#include "components/shader.h"
+#include "graphics/shader_program.h"
 #include "mesh.h"
 
-
 namespace mini_creator {
-namespace components {
+namespace graphics {
 
 class Model : protected QOpenGLFunctions {
 public:
@@ -39,7 +38,7 @@ public:
             const QVector3D &light_position, const QVector3D &camera_position);
 
 private:
-  std::shared_ptr<Shader> shader_;
+  std::shared_ptr<ShaderProgram> shader_program_;
   std::vector<std::shared_ptr<Mesh>> meshes_;
 
   QString name_;
@@ -49,7 +48,7 @@ private:
   glm::vec3 minBound_, maxBound_;
 };
 
-} // namespace components
+} // namespace graphics
 } // namespace mini_creator
 
 #endif // MODEL_H

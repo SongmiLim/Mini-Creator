@@ -1,7 +1,7 @@
 #include "camera.h"
 
 namespace mini_creator {
-namespace components {
+namespace graphics {
 
 Camera::Camera() {
   position_ = QVector3D(0.0f, 0.0f, 5.0f);
@@ -151,5 +151,5 @@ void Camera::UpdateProjectionMatrix() {
   projection_matrix_.perspective(fov_, aspect_ratio_, near_plane_, far_plane_);
 }
 
-} // namespace components
+} // namespace graphics
 } // namespace mini_creator

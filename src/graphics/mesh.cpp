@@ -4,7 +4,7 @@
 #include <QFileInfo>
 
 namespace mini_creator {
-namespace components {
+namespace graphics {
 
 Mesh::Mesh() : ebo_(QOpenGLBuffer::IndexBuffer) {
   initializeOpenGLFunctions();
@@ -123,9 +123,9 @@ void Mesh::SetSpecularColor(const glm::vec3 &color) { specular_color_ = color; }
 void Mesh::SetAmbientColor(const glm::vec3 &color) { ambient_color_ = color; }
 void Mesh::SetShininess(float shininess) { shininess_ = shininess; }
 
-void Mesh::Draw(std::shared_ptr<Shader> shader) {
+void Mesh::Draw(std::shared_ptr<ShaderProgram> shader) {
   if (!shader) {
-    qDebug() << "Mesh::Draw - Shader program is null.";
+    qDebug() << "Mesh::Draw - ShaderProgram program is null.";
     return;
   }
 
@@ -172,5 +172,5 @@ void Mesh::Draw(std::shared_ptr<Shader> shader) {
   }
 }
 
-} // namespace components
+} // namespace graphics
 } // namespace mini_creator

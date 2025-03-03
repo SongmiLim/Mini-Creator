@@ -2,7 +2,7 @@
 #define CAMERA_MODE_H
 
 namespace mini_creator {
-namespace components {
+namespace graphics {
 
 enum class CameraMode { FirstPerson, ThirdPerson };
 

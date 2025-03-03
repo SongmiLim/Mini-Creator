@@ -4,16 +4,16 @@
 #include <QDebug>
 #include <Qtimer>
 
-#include "components/camera_mode.h"
 #include "core/model_manager.h"
+#include "graphics/camera_mode.h"
 
 namespace mini_creator {
 namespace ui {
 namespace widgets {
 
 RenderWidget::RenderWidget(QWidget *parent) : QOpenGLWidget(parent) {
-  camera_ = std::make_shared<components::Camera>();
-  light_ = std::make_shared<components::Light>();
+  camera_ = std::make_shared<graphics::Camera>();
+  light_ = std::make_shared<graphics::Light>();
 
   QTimer *timer = new QTimer(this);
   connect(timer, &QTimer::timeout, this,
@@ -115,7 +115,7 @@ void RenderWidget::LoadUi() {
 }
 
 void RenderWidget::UpdateToggleButtonText() {
-  if (camera_->GetMode() == components::CameraMode::FirstPerson) {
+  if (camera_->GetMode() == graphics::CameraMode::FirstPerson) {
     toggle_button_->setText("Camera Mode: First Person");
   } else {
     toggle_button_->setText("Camera Mode: Third Person");

@@ -7,8 +7,8 @@
 #include <assimp/scene.h>
 #include <glm/glm.hpp>
 
-#include "components/mesh.h"
-#include "components/model.h"
+#include "graphics/mesh.h"
+#include "graphics/model.h"
 
 namespace mini_creator {
 namespace commands {
@@ -21,9 +21,9 @@ public:
 
 private:
   static void ProcessNode(aiNode *node, const aiScene *scene,
-                          std::shared_ptr<components::Model> &model);
-  static std::shared_ptr<components::Mesh> ProcessMesh(aiMesh *mesh,
-                                                       const aiScene *scene);
+                          std::shared_ptr<graphics::Model> &model);
+  static std::shared_ptr<graphics::Mesh> ProcessMesh(aiMesh *mesh,
+                                                     const aiScene *scene);
   static QString file_path_;
 };
 

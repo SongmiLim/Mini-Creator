@@ -4,12 +4,12 @@
 #include <glm/glm.hpp>
 
 namespace mini_creator {
-namespace components {
+namespace graphics {
 
 Light::Light() : ebo_(QOpenGLBuffer::IndexBuffer) {
   initializeOpenGLFunctions();
 
-  shader_ = std::make_shared<Shader>();
+  shader_ = std::make_shared<ShaderProgram>();
   shader_->Load(QCoreApplication::applicationDirPath() +
                     "/../../src/graphics/shader/light_cube.vs",
                 QCoreApplication::applicationDirPath() +
@@ -79,5 +79,5 @@ void Light::BindBuffers() {
   ebo_.release();
 }
 
-} // namespace components
+} // namespace graphics
 } // namespace mini_creator

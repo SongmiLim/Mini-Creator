@@ -8,7 +8,7 @@
 #include "camera_mode.h"
 
 namespace mini_creator {
-namespace components {
+namespace graphics {
 
 class Camera {
 
@@ -60,7 +60,7 @@ private:
   CameraMode mode_ = CameraMode::ThirdPerson;
 };
 
-} // namespace components
+} // namespace graphics
 } // namespace mini_creator
 
 #endif // CAMERA_H

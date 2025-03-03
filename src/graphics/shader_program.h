@@ -1,5 +1,5 @@
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef SHADER_PROGRAM_H
+#define SHADER_PROGRAM_H
 
 #include <QOpenGLShaderProgram>
 #include <QString>
@@ -7,12 +7,12 @@
 #include <glm/glm.hpp>
 
 namespace mini_creator {
-namespace components {
+namespace graphics {
 
-class Shader {
+class ShaderProgram {
 public:
-  Shader();
-  ~Shader();
+  ShaderProgram();
+  ~ShaderProgram();
 
   bool Load(const QString &vertexPath, const QString &fragmentPath);
   void Use();
@@ -32,7 +32,7 @@ private:
   QOpenGLShaderProgram *shader_program_;
 };
 
-} // namespace components
+} // namespace graphics
 } // namespace mini_creator
 
-#endif // SHADER_H
+#endif // SHADER_PROGRAM_H

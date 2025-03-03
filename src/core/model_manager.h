@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "components/model.h"
+#include "graphics/model.h"
 
 namespace mini_creator {
 namespace core {
@@ -13,9 +13,9 @@ class ModelManager {
 public:
   static ModelManager &Instance();
 
-  void AddModel(std::shared_ptr<components::Model> model);
-  std::shared_ptr<components::Model> GetModel(const QString &name) const;
-  const std::vector<std::shared_ptr<components::Model>> &GetAllModels() const;
+  void AddModel(std::shared_ptr<graphics::Model> model);
+  std::shared_ptr<graphics::Model> GetModel(const QString &name) const;
+  const std::vector<std::shared_ptr<graphics::Model>> &GetAllModels() const;
   bool IsBoundingBoxChanged() const { return is_bounding_box_changed; }
   void ResetBoundingBoxChangedFlag() { is_bounding_box_changed = false; }
 
@@ -24,7 +24,7 @@ private:
   ~ModelManager() = default;
 
   bool is_bounding_box_changed = false;
-  std::vector<std::shared_ptr<components::Model>> models_;
+  std::vector<std::shared_ptr<graphics::Model>> models_;
 };
 
 } // namespace core

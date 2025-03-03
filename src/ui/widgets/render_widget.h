@@ -11,8 +11,8 @@
 #include <QPushButton>
 #include <QWheelEvent>
 
-#include "components/camera.h"
-#include "components/light.h"
+#include "graphics/camera.h"
+#include "graphics/light.h"
 
 namespace mini_creator {
 namespace ui {
@@ -47,8 +47,8 @@ private:
 
   QPushButton *toggle_button_;
 
-  std::shared_ptr<components::Camera> camera_;
-  std::shared_ptr<components::Light> light_;
+  std::shared_ptr<graphics::Camera> camera_;
+  std::shared_ptr<graphics::Light> light_;
 
   bool is_mouse_pressed_ = false;
   QPoint last_mouse_pos_;
