@@ -3,10 +3,10 @@
 
 #include <QMainWindow>
 
-#include "menu_bar.h"
-#include "tool_bar.h"
-#include "widgets/object_control_widget.h"
-#include "widgets/render_widget.h"
+#include "ui/menu_bar.h"
+#include "ui/tool_bar.h"
+#include "ui/widgets/object_control_widget.h"
+#include "ui/widgets/render_widget.h"
 
 namespace mini_creator {
 namespace ui {

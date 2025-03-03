@@ -3,10 +3,7 @@
 
 #include <QKeyEvent>
 #include <QMouseEvent>
-#include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
-#include <QOpenGLShaderProgram>
-#include <QOpenGLVertexArrayObject>
 #include <QOpenGLWidget>
 #include <QPushButton>
 #include <QWheelEvent>

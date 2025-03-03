@@ -4,6 +4,7 @@
 #include <QVector3D>
 #include <memory>
 
+
 #include "graphics/model.h"
 
 namespace mini_creator {

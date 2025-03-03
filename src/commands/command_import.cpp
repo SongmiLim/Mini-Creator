@@ -1,10 +1,10 @@
 #include "command_import.h"
 
+#include <vector>
+
 #include <QDebug>
 #include <QFileInfo>
 #include <QString>
-
-#include <vector>
 
 #include "core/model_manager.h"
 

@@ -3,10 +3,11 @@
 
 #include <QMenuBar>
 
-#include "menu_bar/file_menu.h"
-#include "menu_bar/edit_menu.h"
-#include "menu_bar/animation_menu.h"
-#include "menu_bar/camera_menu.h"
+#include "ui/menu_bar/animation_menu.h"
+#include "ui/menu_bar/camera_menu.h"
+#include "ui/menu_bar/edit_menu.h"
+#include "ui/menu_bar/file_menu.h"
+
 
 namespace mini_creator {
 namespace ui {
@@ -17,12 +18,12 @@ class MenuBar : public QMenuBar {
 public:
   explicit MenuBar();
   ~MenuBar() = default;
-  
+
   void Render();
 
 private:
   void CreateMenu();
-  
+
   menu_bar::FileMenu *file_menu_;
   menu_bar::EditMenu *edit_menu_;
   menu_bar::AnimationMenu *animation_menu_;

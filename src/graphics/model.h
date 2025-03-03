@@ -1,14 +1,18 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "graphics/shader_program.h"
-#include "mesh.h"
+#include <memory>
+#include <vector>
+
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
 #include <QString>
 #include <glm/glm.hpp>
-#include <memory>
-#include <vector>
+
+
+#include "graphics/mesh.h"
+#include "graphics/shader_program.h"
+
 
 namespace mini_creator {
 namespace graphics {

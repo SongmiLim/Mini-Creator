@@ -2,8 +2,6 @@
 
 #include <QCoreApplication>
 #include <QDebug>
-#include <QOpenGLBuffer>
-#include <QOpenGLFunctions>
 
 namespace mini_creator {
 namespace graphics {

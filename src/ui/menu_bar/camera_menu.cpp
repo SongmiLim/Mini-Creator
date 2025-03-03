@@ -1,7 +1,6 @@
 #include "camera_menu.h"
 
 #include <QActionGroup>
-#include <QFileDialog>
 #include <QMessageBox>
 
 #include "commands/command_import.h"

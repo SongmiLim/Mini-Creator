@@ -6,7 +6,6 @@
 #include <QMatrix4x4>
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
-#include <QOpenGLShaderProgram>
 
 #include "graphics/shader_program.h"
 

@@ -1,7 +1,6 @@
 #include "light.h"
 
 #include <QCoreApplication>
-#include <glm/glm.hpp>
 
 namespace mini_creator {
 namespace graphics {

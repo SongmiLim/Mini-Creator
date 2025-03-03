@@ -5,7 +5,7 @@
 #include <QVector3D>
 #include <glm/glm.hpp>
 
-#include "camera_mode.h"
+#include "graphics/camera_mode.h"
 
 namespace mini_creator {
 namespace graphics {
