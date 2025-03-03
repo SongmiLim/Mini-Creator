@@ -11,20 +11,21 @@ namespace core {
 
 class ModelManager {
 public:
-  static ModelManager &Instance();
+  static void AddModel(std::shared_ptr<graphics::Model> model);
 
-  void AddModel(std::shared_ptr<graphics::Model> model);
-  std::shared_ptr<graphics::Model> GetModel(const QString &name) const;
-  const std::vector<std::shared_ptr<graphics::Model>> &GetAllModels() const;
-  bool IsBoundingBoxChanged() const { return is_bounding_box_changed; }
-  void ResetBoundingBoxChangedFlag() { is_bounding_box_changed = false; }
+  static void SetSelectedModel(std::shared_ptr<graphics::Model> model);
+
+  static std::shared_ptr<graphics::Model> GetModel(const QString &name);
+  static std::shared_ptr<graphics::Model> GetSelectedModel();
+  static std::vector<std::shared_ptr<graphics::Model>> &GetAllModels();
+
+  static bool IsBoundingBoxChanged();
+  static void ResetBoundingBoxChangedFlag();
 
 private:
-  ModelManager() = default;
-  ~ModelManager() = default;
-
-  bool is_bounding_box_changed = false;
-  std::vector<std::shared_ptr<graphics::Model>> models_;
+  static bool is_bounding_box_changed_;
+  static std::vector<std::shared_ptr<graphics::Model>> models_;
+  static std::shared_ptr<graphics::Model> selected_model_;
 };
 
 } // namespace core

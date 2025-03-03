@@ -5,7 +5,6 @@
 
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
-#include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 #include <QString>
 #include <glm/glm.hpp>
@@ -23,25 +22,26 @@ public:
   void SetVertices(const std::vector<glm::vec3> &vertices);
   void SetNormals(const std::vector<glm::vec3> &normals);
   void SetIndices(const std::vector<uint32_t> &indices);
-
   void SetTexCoords(const std::vector<glm::vec2> &texCoords);
-  void LoadTexture(const QString &file_path);
-  void CreateDefaultTexture();
-
   void SetDiffuseColor(const glm::vec3 &color);
   void SetSpecularColor(const glm::vec3 &color);
   void SetAmbientColor(const glm::vec3 &color);
   void SetShininess(float shininess);
 
   const std::vector<glm::vec3> &GetVertices() const { return vertices_; }
+  const glm::vec3 GetMinBound() const;
+  const glm::vec3 GetMaxBound() const;
+
+  void LoadTexture(const QString &file_path);
+  void CreateDefaultTexture();
 
   void Draw(std::shared_ptr<ShaderProgram> shader);
 
 private:
-  QOpenGLBuffer vbo_vertices_;
-  QOpenGLBuffer vbo_normals_;
-  QOpenGLBuffer vbo_tex_coords_;
-  QOpenGLBuffer ebo_;
+  QOpenGLBuffer vbo_vertices_{QOpenGLBuffer::VertexBuffer};
+  QOpenGLBuffer vbo_normals_{QOpenGLBuffer::VertexBuffer};
+  QOpenGLBuffer vbo_tex_coords_{QOpenGLBuffer::VertexBuffer};
+  QOpenGLBuffer ebo_{QOpenGLBuffer::IndexBuffer};
   QOpenGLTexture *texture_ = nullptr;
 
   glm::vec3 diffuse_color_{1.0f, 1.0f, 1.0f};
@@ -51,7 +51,7 @@ private:
 
   // std::shared_ptr<Material> material_;
   std::vector<glm::vec3> vertices_;
-  size_t index_count_;
+  size_t index_count_ = 0;
 };
 
 } // namespace graphics

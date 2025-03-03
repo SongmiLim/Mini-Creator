@@ -217,7 +217,7 @@ void ObjectControlWidget::HandleXRotationChanged(const int value) {
   float rotation_value = static_cast<float>(value);
   x_rotation_label_->setText(QString("X: %1°").arg(rotation_value, 0, 'f', 1));
 
-  auto models = core::ModelManager::Instance().GetAllModels();
+  auto models = core::ModelManager::GetAllModels();
   for (auto &model : models) {
     glm::vec3 rotation = model->GetRotation();
     rotation.x = rotation_value;
@@ -229,7 +229,7 @@ void ObjectControlWidget::HandleYRotationChanged(const int value) {
   float rotation_value = static_cast<float>(value);
   y_rotation_label_->setText(QString("Y: %1°").arg(rotation_value, 0, 'f', 1));
 
-  auto models = core::ModelManager::Instance().GetAllModels();
+  auto models = core::ModelManager::GetAllModels();
   for (auto &model : models) {
     glm::vec3 rotation = model->GetRotation();
     rotation.y = rotation_value;
@@ -241,7 +241,7 @@ void ObjectControlWidget::HandleZRotationChanged(const int value) {
   float rotation_value = static_cast<float>(value);
   z_rotation_label_->setText(QString("Z: %1°").arg(rotation_value, 0, 'f', 1));
 
-  auto models = core::ModelManager::Instance().GetAllModels();
+  auto models = core::ModelManager::GetAllModels();
   for (auto &model : models) {
     glm::vec3 rotation = model->GetRotation();
     rotation.z = rotation_value;
@@ -254,7 +254,7 @@ void ObjectControlWidget::HandleXTranslationChanged(const int value) {
   x_translation_label_->setText(
       QString("X: %1").arg(translated_value, 0, 'f', 2));
 
-  auto models = core::ModelManager::Instance().GetAllModels();
+  auto models = core::ModelManager::GetAllModels();
   for (auto &model : models) {
     glm::vec3 translate = model->GetTranslation();
     translate.x = translated_value;
@@ -267,7 +267,7 @@ void ObjectControlWidget::HandleYTranslationChanged(const int value) {
   y_translation_label_->setText(
       QString("Y: %1").arg(translated_value, 0, 'f', 2));
 
-  auto models = core::ModelManager::Instance().GetAllModels();
+  auto models = core::ModelManager::GetAllModels();
   for (auto &model : models) {
     glm::vec3 translate = model->GetTranslation();
     translate.y = translated_value;
@@ -280,7 +280,7 @@ void ObjectControlWidget::HandleZTranslationChanged(const int value) {
   z_translation_label_->setText(
       QString("Z: %1").arg(translated_value, 0, 'f', 2));
 
-  auto models = core::ModelManager::Instance().GetAllModels();
+  auto models = core::ModelManager::GetAllModels();
   for (auto &model : models) {
     glm::vec3 translate = model->GetTranslation();
     translate.z = translated_value;
@@ -292,7 +292,7 @@ void ObjectControlWidget::HandleXScaleChanged(const int value) {
   float scaled_value = value * 0.01f;
   x_scale_label_->setText(QString("X: %1").arg(scaled_value, 0, 'f', 3));
 
-  auto models = core::ModelManager::Instance().GetAllModels();
+  auto models = core::ModelManager::GetAllModels();
   for (auto &model : models) {
     glm::vec3 scale = model->GetScale();
     scale.x = scaled_value;
@@ -304,7 +304,7 @@ void ObjectControlWidget::HandleYScaleChanged(const int value) {
   float scaled_value = value * 0.01f;
   y_scale_label_->setText(QString("Y: %1").arg(scaled_value, 0, 'f', 3));
 
-  auto models = core::ModelManager::Instance().GetAllModels();
+  auto models = core::ModelManager::GetAllModels();
   for (auto &model : models) {
     glm::vec3 scale = model->GetScale();
     scale.y = scaled_value;
@@ -316,7 +316,7 @@ void ObjectControlWidget::HandleZScaleChanged(const int value) {
   float scaled_value = value * 0.01f;
   z_scale_label_->setText(QString("Z: %1").arg(scaled_value, 0, 'f', 3));
 
-  auto models = core::ModelManager::Instance().GetAllModels();
+  auto models = core::ModelManager::GetAllModels();
   for (auto &model : models) {
     glm::vec3 scale = model->GetScale();
     scale.z = scaled_value;

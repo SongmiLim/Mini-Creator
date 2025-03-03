@@ -32,7 +32,7 @@ void CommandImport::Execute(const QString &file_path) {
       std::make_shared<graphics::Model>(file_path);
   ProcessNode(scene->mRootNode, scene, model);
 
-  core::ModelManager::Instance().AddModel(model);
+  core::ModelManager::AddModel(model);
 }
 
 void CommandImport::ProcessNode(aiNode *node, const aiScene *scene,
@@ -146,7 +146,7 @@ void CommandImport::ImportTestCubeModel() {
   mesh->SetVertices(cubeVertices);
   mesh->SetIndices(cubeIndices);
   model->AddMesh(mesh);
-  core::ModelManager::Instance().AddModel(model);
+  core::ModelManager::AddModel(model);
 }
 
 } // namespace commands

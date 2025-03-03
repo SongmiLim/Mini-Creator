@@ -29,8 +29,8 @@ private:
 
   std::shared_ptr<ShaderProgram> shader_;
   QVector3D position_ = QVector3D(5.0f, 5.0f, 5.0f);
-  QOpenGLBuffer vbo_;
-  QOpenGLBuffer ebo_;
+  QOpenGLBuffer vbo_{QOpenGLBuffer::VertexBuffer};
+  QOpenGLBuffer ebo_{QOpenGLBuffer::IndexBuffer};
 };
 
 } // namespace graphics

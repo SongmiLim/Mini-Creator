@@ -1,11 +1,11 @@
 #include "render_widget.h"
 
-#include <QCoreApplication>
 #include <QDebug>
 #include <Qtimer>
 
 #include "core/model_manager.h"
 #include "graphics/camera_mode.h"
+#include "graphics/physics/raycast.h"
 
 namespace mini_creator {
 namespace ui {
@@ -46,23 +46,26 @@ void RenderWidget::paintGL() {
   const QVector3D &light_position = light_->GetPosition();
   const QVector3D &camera_position = camera_->GetPosition();
 
-  auto &models = core::ModelManager::Instance().GetAllModels();
-  for (auto &model : models) {
+  if (core::ModelManager::IsBoundingBoxChanged()) {
+    AdjustCameraToModel();
+    core::ModelManager::ResetBoundingBoxChangedFlag();
+  }
 
-    if (core::ModelManager::Instance().IsBoundingBoxChanged()) {
-      AdjustCameraToModel();
-      core::ModelManager::Instance().ResetBoundingBoxChangedFlag();
-    }
+  auto &models = core::ModelManager::GetAllModels();
+  for (auto &model : models) {
     model->Draw(view_matrix, projection_matrix, light_position,
                 camera_position);
   }
 
   light_->Draw(view_matrix, projection_matrix);
+
+  if (selected_model_) {
+    selected_model_->DrawBoundingBox(view_matrix, projection_matrix);
+  }
 }
 
 void RenderWidget::mouseMoveEvent(QMouseEvent *event) {
-  if (is_mouse_pressed_) {
-
+  if (is_wheel_button_pressed_) {
     QPoint current_pos = event->pos();
     float xoffset = current_pos.x() - last_mouse_pos_.x();
     float yoffset = current_pos.y() - last_mouse_pos_.y();
@@ -75,14 +78,29 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *event) {
 
 void RenderWidget::mousePressEvent(QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
+    QVector3D origin = camera_->GetPosition();
+    QVector3D direction = camera_->CalculateWorldRayFromScreenPos(
+        event->pos(), this->width(), this->height());
+
+    auto selected_model =
+        graphics::physics::Raycast::Execute(origin, direction);
+    if (selected_model) {
+      selected_model_ = selected_model;
+      core::ModelManager::SetSelectedModel(selected_model_);
+    } else {
+      selected_model_ = nullptr;
+      core::ModelManager::SetSelectedModel(nullptr);
+    }
+    update();
+  } else if (event->button() == Qt::MiddleButton) {
     last_mouse_pos_ = event->pos();
-    is_mouse_pressed_ = true;
+    is_wheel_button_pressed_ = true;
   }
 }
 
 void RenderWidget::mouseReleaseEvent(QMouseEvent *event) {
-  if (event->button() == Qt::LeftButton) {
-    is_mouse_pressed_ = false;
+  if (event->button() == Qt::MiddleButton) {
+    is_wheel_button_pressed_ = false;
   }
 }
 
@@ -123,7 +141,7 @@ void RenderWidget::UpdateToggleButtonText() {
 }
 
 void RenderWidget::AdjustCameraToModel() {
-  auto &models = core::ModelManager::Instance().GetAllModels();
+  auto &models = core::ModelManager::GetAllModels();
   if (models.empty()) {
     return;
   }
@@ -132,14 +150,12 @@ void RenderWidget::AdjustCameraToModel() {
 
   for (const auto &model : models) {
     for (const auto &mesh : model->GetMeshes()) {
-      for (const auto &vertex : mesh->GetVertices()) {
-        minBound = glm::min(minBound, vertex);
-        maxBound = glm::max(maxBound, vertex);
-      }
+      minBound = glm::min(minBound, mesh->GetMinBound());
+      maxBound = glm::max(maxBound, mesh->GetMaxBound());
     }
   }
 
-  camera_->FitToBoundingBox(minBound, maxBound);
+  camera_->AdjustToBoundingBox(minBound, maxBound);
 }
 
 } // namespace widgets

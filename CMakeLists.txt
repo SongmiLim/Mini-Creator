@@ -10,7 +10,7 @@ include(3rdparty)
 
 file(GLOB_RECURSE COMMANDS_SRC "src/commands/*.cpp" "src/commands/*.h")
 file(GLOB_RECURSE CORE_SRC "src/core/*.cpp" "src/core/*.h")
-file(GLOB_RECURSE COMPONENTS_SRC "src/graphics/*.cpp" "src/graphics/*.h")
+file(GLOB_RECURSE GRAPHICS_SRC "src/graphics/*.cpp" "src/graphics/*.h" "src/graphics/physics/*.cpp" "src/graphics/physics/*.h")
 file(GLOB_RECURSE UI_SRC "src/ui/*.cpp" "src/ui/*.h" "src/ui/widgets/*.cpp" "src/ui/widgets/*.h"
 "src/ui/menu_bar/*.cpp" "src/ui/menu_bar/*.h")
 
@@ -19,7 +19,7 @@ qt_add_executable(${PROJECT_NAME}
     src/app.h src/app.cpp
     ${COMMANDS_SRC}
     ${CORE_SRC}
-    ${COMPONENTS_SRC}
+    ${GRAPHICS_SRC}
     ${UI_SRC}
 )
 

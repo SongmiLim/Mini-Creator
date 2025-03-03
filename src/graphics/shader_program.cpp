@@ -1,6 +1,5 @@
 #include "shader_program.h"
 
-#include <QCoreApplication>
 #include <QDebug>
 
 namespace mini_creator {

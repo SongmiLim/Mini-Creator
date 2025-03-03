@@ -4,21 +4,8 @@ namespace mini_creator {
 namespace graphics {
 
 Camera::Camera() {
-  position_ = QVector3D(0.0f, 0.0f, 5.0f);
-  target_ = QVector3D(0.0f, 0.0f, 0.0f);
-  front_ = QVector3D(0.0f, 0.0f, -1.0f);
-  up_ = QVector3D(0.0f, 1.0f, 0.0f);
-
-  yaw_ = -90.0f;
-  pitch_ = 0.0f, fov_ = 45.0f;
-
-  aspect_ratio_ = 1.0f;
-
-  near_plane_ = 0.1f;
-  far_plane_ = 1000.0f;
-
-  movement_speed_ = 0.5f;
-  mouse_sensitivity_ = 0.1f;
+  UpdateViewMatrix();
+  UpdateProjectionMatrix();
 }
 
 void Camera::SetAspectRatio(int width, int height) {
@@ -45,6 +32,7 @@ QMatrix4x4 Camera::GetViewMatrix() const { return view_matrix_; }
 QMatrix4x4 Camera::GetProjectionMatrix() const { return projection_matrix_; }
 
 QVector3D Camera::GetPosition() const { return position_; }
+
 CameraMode Camera::GetMode() const { return mode_; }
 
 void Camera::ToggleMode() {
@@ -55,20 +43,15 @@ void Camera::ToggleMode() {
   UpdateProjectionMatrix();
 }
 
-void Camera::FitToBoundingBox(const glm::vec3 &min_bound,
-                              const glm::vec3 &max_bound) {
-  glm::vec3 center = (min_bound + max_bound) * 0.5f;
-  glm::vec3 size = max_bound - min_bound;
-  float radius = glm::length(size) * 0.5f;
-  distance_ = radius / std::tan(glm::radians(fov_) / 2.0f);
+void Camera::AdjustToBoundingBox(const glm::vec3 &min_bound,
+                                 const glm::vec3 &max_bound) {
+  glm::vec3 bounding_box_size = max_bound - min_bound;
+  float bounding_box_radius = glm::length(bounding_box_size) * 0.5f;
+  distance_ = bounding_box_radius / std::tan(glm::radians(fov_) / 2.0f);
 
-  if (mode_ == CameraMode::ThirdPerson) {
-    target_ = QVector3D(center.x, center.y, center.z);
-    position_ = target_ - front_ * distance_;
-  } else {
-    position_ = QVector3D(center.x, center.y, center.z);
-    target_ = position_ + front_;
-  }
+  glm::vec3 center = (min_bound + max_bound) * 0.5f;
+  target_ = QVector3D(center.x, center.y, center.z);
+  position_ = target_ - front_ * distance_;
 
   UpdateViewMatrix();
 }
@@ -134,6 +117,24 @@ void Camera::ProcessKeyboardInput(const QString &key) {
           QVector3D::crossProduct(front_, up_).normalized() * movement_speed_;
   }
   UpdateViewMatrix();
+}
+
+QVector3D Camera::CalculateWorldRayFromScreenPos(const QPoint &screen_pos,
+                                                 int screen_width,
+                                                 int screen_height) const {
+  float x = (2.0f * screen_pos.x()) / screen_width - 1.0f;
+  float y = 1.0f - (2.0f * screen_pos.y()) / screen_height;
+  float z = 1.0f;
+
+  QVector3D ray_nds(x, y, z);
+  QVector4D ray_clip(ray_nds.x(), ray_nds.y(), -1.0, 1.0);
+  QVector4D ray_eye = projection_matrix_.inverted() * ray_clip;
+  ray_eye = QVector4D(ray_eye.x(), ray_eye.y(), -1.0, 0.0);
+
+  QVector3D ray_world = (view_matrix_.inverted() * ray_eye).toVector3D();
+  ray_world.normalize();
+
+  return ray_world;
 }
 
 void Camera::UpdateViewMatrix() {

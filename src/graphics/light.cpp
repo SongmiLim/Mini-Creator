@@ -6,7 +6,7 @@
 namespace mini_creator {
 namespace graphics {
 
-Light::Light() : ebo_(QOpenGLBuffer::IndexBuffer) {
+Light::Light() {
   initializeOpenGLFunctions();
 
   shader_ = std::make_shared<ShaderProgram>();

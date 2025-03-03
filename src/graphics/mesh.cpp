@@ -6,10 +6,7 @@
 namespace mini_creator {
 namespace graphics {
 
-Mesh::Mesh() : ebo_(QOpenGLBuffer::IndexBuffer) {
-  initializeOpenGLFunctions();
-  index_count_ = 0;
-}
+Mesh::Mesh() { initializeOpenGLFunctions(); }
 
 Mesh::~Mesh() {
   vbo_vertices_.destroy();
@@ -64,29 +61,25 @@ void Mesh::SetTexCoords(const std::vector<glm::vec2> &tex_coords) {
   vbo_tex_coords_.release();
 }
 
-void Mesh::CreateDefaultTexture() {
-  if (texture_) {
-    delete texture_;
-    texture_ = nullptr;
+void Mesh::SetDiffuseColor(const glm::vec3 &color) { diffuse_color_ = color; }
+void Mesh::SetSpecularColor(const glm::vec3 &color) { specular_color_ = color; }
+void Mesh::SetAmbientColor(const glm::vec3 &color) { ambient_color_ = color; }
+void Mesh::SetShininess(float shininess) { shininess_ = shininess; }
+
+const glm::vec3 Mesh::GetMinBound() const {
+  glm::vec3 min_bound(FLT_MAX);
+  for (const auto &vertex : vertices_) {
+    min_bound = glm::min(min_bound, vertex);
   }
+  return min_bound;
+}
 
-  QImage default_image(1, 1, QImage::Format_RGB888);
-  default_image.fill(QColor(160, 160, 160));
-
-  texture_ = new QOpenGLTexture(default_image);
-
-  if (!texture_->isCreated()) {
-    qDebug() << "Error: Failed to create default texture!";
-    delete texture_;
-    texture_ = nullptr;
-    return;
+const glm::vec3 Mesh::GetMaxBound() const {
+  glm::vec3 max_bound(-FLT_MAX);
+  for (const auto &vertex : vertices_) {
+    max_bound = glm::max(max_bound, vertex);
   }
-
-  texture_->setWrapMode(QOpenGLTexture::Repeat);
-  texture_->setMinificationFilter(QOpenGLTexture::Linear);
-  texture_->setMagnificationFilter(QOpenGLTexture::Linear);
-
-  texture_->release();
+  return max_bound;
 }
 
 void Mesh::LoadTexture(const QString &file_path) {
@@ -118,10 +111,30 @@ void Mesh::LoadTexture(const QString &file_path) {
   texture_->release();
 }
 
-void Mesh::SetDiffuseColor(const glm::vec3 &color) { diffuse_color_ = color; }
-void Mesh::SetSpecularColor(const glm::vec3 &color) { specular_color_ = color; }
-void Mesh::SetAmbientColor(const glm::vec3 &color) { ambient_color_ = color; }
-void Mesh::SetShininess(float shininess) { shininess_ = shininess; }
+void Mesh::CreateDefaultTexture() {
+  if (texture_) {
+    delete texture_;
+    texture_ = nullptr;
+  }
+
+  QImage default_image(1, 1, QImage::Format_RGB888);
+  default_image.fill(QColor(160, 160, 160));
+
+  texture_ = new QOpenGLTexture(default_image);
+
+  if (!texture_->isCreated()) {
+    qDebug() << "Error: Failed to create default texture!";
+    delete texture_;
+    texture_ = nullptr;
+    return;
+  }
+
+  texture_->setWrapMode(QOpenGLTexture::Repeat);
+  texture_->setMinificationFilter(QOpenGLTexture::Linear);
+  texture_->setMagnificationFilter(QOpenGLTexture::Linear);
+
+  texture_->release();
+}
 
 void Mesh::Draw(std::shared_ptr<ShaderProgram> shader) {
   if (!shader) {
