@@ -84,18 +84,20 @@ cmake ..
 ## Qt 미설치 사용자를 위한 실행 파일 제공 (Window 사용자)
 
 Qt가 설치되어 있지 않은 사용자도 실행할 수 있도록, 실행 파일과 필요한 DLL이 포함된 `.zip` 파일을 제공합니다.<br>
-📦 [MiniCreator.zip (Releases)](https://github.com/user-attachments/files/21140964/MiniCreator.zip)
+[mini_creator.zip (Releases)](https://drive.google.com/file/d/1JL1q2tUycnJ7cRIlrcDMU_R7aQQDYmUv/view?usp=sharing)
 
-압축을 푼 후 `MiniCreator.exe`를 실행하면 바로 사용할 수 있습니다.
-/samples 폴더에 포함된 테스트용 3D 메쉬 파일들을 불러와 기능을 직접 확인해보세요.
+압축을 푼 후 `mini_creator.exe`를 실행하면 바로 사용할 수 있습니다.<br>
+`/samples` 폴더에 포함된 테스트용 3D OBJ 파일들을 import 해서 기능을 직접 확인해보세요.
 
 
 📁 파일 구성
 ```bash
-MiniCreator/
-├── MiniCreator.exe
-├── assimp-vc143-mt.dll
-└── samples/
+mini_creator/
+├── mini_creator.exe
+├── Qt6Core.dll
+├── Qt6Widgets.dll
+├── ...
+├── samples/
 ```
 ---
 <br><br>
@@ -116,6 +118,8 @@ MiniCreator/
 ✅ **[v2.0] Qt 기반 UI 적용 (ImGui 제거)**
 
 ✅ **[v2.0] 바운딩 박스 기반 카메라 위치 자동 조정**
+
+🔲 v1.0에 포함되어 있던 Light 위치 및 색상 조절 기능(Ambient, Diffuse, Specular) 통합
 
 🔲 **PBR(Physically Based Rendering)**을 적용하여 더 현실적인 재질 표현
 
