@@ -2,6 +2,9 @@
 
 #include <QCoreApplication>
 
+#include "graphics/shader/light_cube_vs.h"
+#include "graphics/shader/light_cube_fs.h"
+
 namespace mini_creator {
 namespace graphics {
 
@@ -9,10 +12,9 @@ Light::Light() {
   initializeOpenGLFunctions();
 
   shader_ = std::make_shared<ShaderProgram>();
-  shader_->Load(QCoreApplication::applicationDirPath() +
-                    "/../../src/graphics/shader/light_cube.vs",
-                QCoreApplication::applicationDirPath() +
-                    "/../../src/graphics/shader/light_cube.fs");
+  shader_->Load(graphics::shader::light_cube_vs,
+                graphics::shader::light_cube_fs);
+
   BindBuffers();
 }
 

@@ -16,13 +16,13 @@ ShaderProgram::~ShaderProgram() {
 
 bool ShaderProgram::Load(const QString &vertexPath,
                          const QString &fragmentPath) {
-  if (!shader_program_->addShaderFromSourceFile(QOpenGLShader::Vertex,
+  if (!shader_program_->addShaderFromSourceCode(QOpenGLShader::Vertex,
                                                 vertexPath)) {
     qDebug() << "Vertex ShaderProgram Error: " << shader_program_->log();
     return false;
   }
 
-  if (!shader_program_->addShaderFromSourceFile(QOpenGLShader::Fragment,
+  if (!shader_program_->addShaderFromSourceCode(QOpenGLShader::Fragment,
                                                 fragmentPath)) {
     qDebug() << "Fragment ShaderProgram Error: " << shader_program_->log();
     return false;

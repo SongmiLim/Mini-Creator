@@ -3,6 +3,13 @@
 #include <QCoreApplication>
 #include <QDebug>
 
+#include "graphics/shader/bounding_box_vs.h"
+#include "graphics/shader/bounding_box_fs.h" 
+#include "graphics/shader/mesh_vs.h"  
+#include "graphics/shader/mesh_fs.h"
+#include "graphics/shader/light_cube_vs.h"
+#include "graphics/shader/light_cube_fs.h"
+
 namespace mini_creator {
 namespace graphics {
 
@@ -10,10 +17,7 @@ Model::Model(const QString &name) : name_(name) {
   initializeOpenGLFunctions();
 
   shader_program_ = std::make_shared<ShaderProgram>();
-  shader_program_->Load(QCoreApplication::applicationDirPath() +
-                            "/../../src/graphics/shader/mesh.vs",
-                        QCoreApplication::applicationDirPath() +
-                            "/../../src/graphics/shader/mesh.fs");
+  shader_program_->Load(graphics::shader::mesh_vs, graphics::shader::mesh_fs);
 }
 
 Model::~Model() { meshes_.clear(); }
@@ -122,10 +126,8 @@ void Model::DrawBoundingBox(const QMatrix4x4 &view_matrix,
 
 void Model::InitializeBoundingBox() {
   bounding_box_shader_ = std::make_shared<ShaderProgram>();
-  bounding_box_shader_->Load(QCoreApplication::applicationDirPath() +
-                                 "/../../src/graphics/shader/bounding_box.vs",
-                             QCoreApplication::applicationDirPath() +
-                                 "/../../src/graphics/shader/bounding_box.fs");
+  bounding_box_shader_->Load(graphics::shader::bounding_box_vs,
+                             graphics::shader::bounding_box_fs);
 
   vbo_.create();
   ebo_.create();
