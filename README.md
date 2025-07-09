@@ -2,8 +2,8 @@
 
 <br>
 
-**Mini Creator**는 C++과 OpenGL을 기반으로 개발된 **경량 3D 엔진**으로, <br>
-**3D 모델 로드 및 렌더링, 카메라 조작, 조명 설정** 등의 기능을 제공합니다.
+**Mini Creator**는 C++과 OpenGL, Qt 기반으로 개발된 경량 3D 렌더링 엔진입니다.
+여러 개의 3D 모델을 불러오고, 실시간 렌더링과 사용자 중심의 카메라 조작, 모델 선택 및 변환 기능을 제공합니다.
 <br><br>
 
 <img width="1918" height="1016" alt="Image" src="https://github.com/user-attachments/assets/e17a34b2-662f-403a-9298-a48517b93989" />
@@ -38,11 +38,24 @@
 
 | 기술 | 역할 |
 |------------|---------|
-| **C++** | 렌더링 로직 및 엔진 전반 구현 |
-| **OpenGL (GLFW + GLAD)** | 그래픽 렌더링 처리 |
-| **Assimp** | 3D 모델 로드 (OBJ, FBX 등 지원) |
-| **STB** | 텍스처 이미지 로딩 |
-| **Qt** | UI 프레임워크 (v2.0에서 ImGui → Qt) |
+| C++ | 렌더링 로직 및 엔진 전반 구현 |
+| OpenGL (GLFW + GLAD)** | 그래픽 렌더링 처리 |
+| Assimp | 3D 모델 로드 (OBJ, FBX 등 지원) |
+| STB | 텍스처 이미지 로딩 |
+| Qt | UI 프레임워크 (v2.0에서 ImGui → Qt) |
+
+---
+<br><br>
+
+## 개발 환경
+
+| 항목 | 내용 |
+|------------|---------|
+| 운영체제 | Windows 11 |
+| 언어 | C++17 |
+| 빌드 도구 | CMake 3.29 |
+| UI 프레임워크 | Qt 6.7.1 |
+| IDE | Visual Studio 2019, VS Code |
 
 ---
 <br><br>
@@ -62,9 +75,30 @@ mkdir build
 cd build
 cmake ..
 ```
-<br><br>
+❗ Qt 설치 및 환경변수 설정이 필요합니다.
 
 ---
+<br><br>
+
+
+## Qt 미설치 사용자를 위한 실행 파일 제공 (Window 사용자)
+
+Qt가 설치되어 있지 않은 사용자도 실행할 수 있도록, 실행 파일과 필요한 DLL이 포함된 `.zip` 파일을 제공합니다.<br>
+📦 [MiniCreator.zip (Releases)](https://github.com/user-attachments/files/21140964/MiniCreator.zip)
+
+압축을 푼 후 `MiniCreator.exe`를 실행하면 바로 사용할 수 있습니다.
+/samples 폴더에 포함된 테스트용 3D 메쉬 파일들을 불러와 기능을 직접 확인해보세요.
+
+
+📁 파일 구성
+```bash
+MiniCreator/
+├── MiniCreator.exe
+├── assimp-vc143-mt.dll
+└── samples/
+```
+---
+<br><br>
 
 ## 참고 자료
 - 🔗 [Khronos OpenGL 공식 문서](https://www.khronos.org/opengl)  
