@@ -36,6 +36,10 @@ public:
   }
   const QString &GetName() const { return name_; }
 
+  // Composes the model transform (T * Rx * Ry * Rz * S). Single source of
+  // truth shared by rendering and raycasting.
+  QMatrix4x4 GetModelMatrix() const;
+
   void Draw(const QMatrix4x4 &view_matrix, const QMatrix4x4 &projection_matrix,
             const QVector3D &light_position, const QVector3D &camera_position);
   void DrawBoundingBox(const QMatrix4x4 &view_matrix,

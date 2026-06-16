@@ -21,15 +21,7 @@ Raycast::Execute(const QVector3D &camera_position,
     glm::vec3 min_bound = model->GetMinBound();
     glm::vec3 max_bound = model->GetMaxBound();
 
-    QMatrix4x4 model_matrix;
-    model_matrix.setToIdentity();
-    model_matrix.translate(model->GetTranslation().x, model->GetTranslation().y,
-                           model->GetTranslation().z);
-    model_matrix.rotate(model->GetRotation().x, QVector3D(1.0f, 0.0f, 0.0f));
-    model_matrix.rotate(model->GetRotation().y, QVector3D(0.0f, 1.0f, 0.0f));
-    model_matrix.rotate(model->GetRotation().z, QVector3D(0.0f, 0.0f, 1.0f));
-    model_matrix.scale(model->GetScale().x, model->GetScale().y,
-                       model->GetScale().z);
+    const QMatrix4x4 model_matrix = model->GetModelMatrix();
 
     QVector3D ray_origin = model_matrix.inverted() * camera_position;
     QVector3D ray_direction =

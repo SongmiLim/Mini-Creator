@@ -62,6 +62,17 @@ const glm::vec3 &Model::GetMaxBound() {
   return max_bound_;
 }
 
+QMatrix4x4 Model::GetModelMatrix() const {
+  QMatrix4x4 model_matrix;
+  model_matrix.setToIdentity();
+  model_matrix.translate(translation_.x, translation_.y, translation_.z);
+  model_matrix.rotate(rotation_.x, QVector3D(1.0f, 0.0f, 0.0f));
+  model_matrix.rotate(rotation_.y, QVector3D(0.0f, 1.0f, 0.0f));
+  model_matrix.rotate(rotation_.z, QVector3D(0.0f, 0.0f, 1.0f));
+  model_matrix.scale(scale_.x, scale_.y, scale_.z);
+  return model_matrix;
+}
+
 void Model::Draw(const QMatrix4x4 &view_matrix,
                  const QMatrix4x4 &projection_matrix,
                  const QVector3D &light_position,
@@ -71,13 +82,7 @@ void Model::Draw(const QMatrix4x4 &view_matrix,
     return;
   }
 
-  QMatrix4x4 model_matrix;
-  model_matrix.setToIdentity();
-  model_matrix.translate(translation_.x, translation_.y, translation_.z);
-  model_matrix.rotate(rotation_.x, QVector3D(1.0f, 0.0f, 0.0f));
-  model_matrix.rotate(rotation_.y, QVector3D(0.0f, 1.0f, 0.0f));
-  model_matrix.rotate(rotation_.z, QVector3D(0.0f, 0.0f, 1.0f));
-  model_matrix.scale(scale_.x, scale_.y, scale_.z);
+  const QMatrix4x4 model_matrix = GetModelMatrix();
 
   shader_program_->Use();
   shader_program_->SetUniform("model", model_matrix);
@@ -100,13 +105,7 @@ void Model::DrawBoundingBox(const QMatrix4x4 &view_matrix,
   }
   UpdateBoundingBox();
 
-  QMatrix4x4 model_matrix;
-  model_matrix.setToIdentity();
-  model_matrix.translate(translation_.x, translation_.y, translation_.z);
-  model_matrix.rotate(rotation_.x, QVector3D(1.0f, 0.0f, 0.0f));
-  model_matrix.rotate(rotation_.y, QVector3D(0.0f, 1.0f, 0.0f));
-  model_matrix.rotate(rotation_.z, QVector3D(0.0f, 0.0f, 1.0f));
-  model_matrix.scale(scale_.x, scale_.y, scale_.z);
+  const QMatrix4x4 model_matrix = GetModelMatrix();
 
   bounding_box_shader_->Use();
   bounding_box_shader_->SetUniform("model", model_matrix);
