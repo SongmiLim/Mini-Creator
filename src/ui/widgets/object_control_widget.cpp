@@ -343,7 +343,7 @@ void ObjectControlWidget::HandleDiffuseChanged() {
   QColor color = QColorDialog::getColor(diffuse_color_, this, "Diffuse Color");
   if (color.isValid()) {
     diffuse_color_ = color;
-    diffuse_color_label_->setText(QString("Ambient: (%1, %2, %3)")
+    diffuse_color_label_->setText(QString("Diffuse: (%1, %2, %3)")
                                       .arg(color.red())
                                       .arg(color.green())
                                       .arg(color.blue()));
@@ -355,7 +355,7 @@ void ObjectControlWidget::HandleSpecularChanged() {
       QColorDialog::getColor(specular_color_, this, "Specular Color");
   if (color.isValid()) {
     specular_color_ = color;
-    specular_color_label_->setText(QString("Ambient: (%1, %2, %3)")
+    specular_color_label_->setText(QString("Specular: (%1, %2, %3)")
                                        .arg(color.red())
                                        .arg(color.green())
                                        .arg(color.blue()));

@@ -80,9 +80,9 @@ private:
   QLabel *direction_z_label_;
   QVector<QLabel *> direction_labels_;
 
-  QColor ambient_color_;
-  QColor diffuse_color_;
-  QColor specular_color_;
+  QColor ambient_color_{255, 255, 255};
+  QColor diffuse_color_{255, 255, 255};
+  QColor specular_color_{255, 255, 255};
   QLabel *ambient_color_label_;
   QLabel *diffuse_color_label_;
   QLabel *specular_color_label_;

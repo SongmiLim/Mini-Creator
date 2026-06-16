@@ -9,8 +9,8 @@ namespace mini_creator {
 namespace ui {
 
 MainWindow::MainWindow()
-    : menu_bar_(nullptr), tool_bar_(nullptr), render_widget_(nullptr),
-      object_control_widget_(nullptr) {
+    : menu_bar_(nullptr), tool_bar_(nullptr), object_control_widget_(nullptr),
+      render_widget_(nullptr) {
   setWindowTitle("Mini Creator");
   setMinimumSize(800, 600);
   showMaximized();
