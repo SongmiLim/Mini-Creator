@@ -19,11 +19,7 @@ public:
   explicit MenuBar();
   ~MenuBar() = default;
 
-  void Render();
-
 private:
-  void CreateMenu();
-
   menu_bar::FileMenu *file_menu_;
   menu_bar::EditMenu *edit_menu_;
   menu_bar::AnimationMenu *animation_menu_;

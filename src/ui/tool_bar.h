@@ -3,12 +3,12 @@
 
 #include <QToolBar>
 
-class MainWindow;
-
 namespace mini_creator {
 namespace ui {
 
 class ToolBar : public QToolBar {
+  Q_OBJECT
+
 public:
   explicit ToolBar(QWidget *parent = nullptr);
   ~ToolBar() = default;
