@@ -13,6 +13,9 @@ Mesh::~Mesh() {
   vbo_normals_.destroy();
   vbo_tex_coords_.destroy();
   ebo_.destroy();
+
+  delete texture_;
+  texture_ = nullptr;
 }
 
 void Mesh::SetVertices(const std::vector<glm::vec3> &vertices) {

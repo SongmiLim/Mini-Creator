@@ -19,6 +19,10 @@ public:
   Mesh();
   ~Mesh();
 
+  // Owns a raw QOpenGLTexture and GL buffers; copying would double-free.
+  Mesh(const Mesh &) = delete;
+  Mesh &operator=(const Mesh &) = delete;
+
   void SetVertices(const std::vector<glm::vec3> &vertices);
   void SetNormals(const std::vector<glm::vec3> &normals);
   void SetIndices(const std::vector<uint32_t> &indices);

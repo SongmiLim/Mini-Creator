@@ -14,6 +14,10 @@ public:
   ShaderProgram();
   ~ShaderProgram();
 
+  // Owns a raw QOpenGLShaderProgram; copying would double-free.
+  ShaderProgram(const ShaderProgram &) = delete;
+  ShaderProgram &operator=(const ShaderProgram &) = delete;
+
   bool Load(const QString &vertexPath, const QString &fragmentPath);
   void Use();
 
