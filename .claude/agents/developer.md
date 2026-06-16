@@ -53,8 +53,8 @@ model: opus
 ### 피킹 / 충돌 / 물리 연동
 - 선택은 화면 좌표 → 월드 레이(`Camera::CalculateWorldRayFromScreenPos`) → ray-AABB
   (`graphics::physics::Raycast`). 레이는 모델의 동일한 model matrix 로 변환해야 일관성 유지.
-- PhysX 연동 시: 메시 `vertices/indices` 로 convex/triangle collider, AABB 로 box collider.
-  시뮬 결과(PxTransform)를 `Model::SetTranslation/SetRotation`(deg) 로 되돌린다.
+- PhysX 연동 시: AABB 로 box collider, `Mesh` 정점으로 convex, 인덱스가 필요하면 triangle
+  mesh collider. 시뮬 결과(PxTransform)는 `Model::SetTranslation/SetRotation`(deg) 로 되돌린다.
 - 좌표계/단위(스케일, up-axis) 불일치를 항상 의심 — USD(Y-up/Z-up, meter), PhysX, GL 간 변환.
 
 ### 성능 / 정밀도

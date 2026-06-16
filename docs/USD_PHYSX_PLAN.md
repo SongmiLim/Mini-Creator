@@ -65,11 +65,14 @@ Mini Creator (Qt/OpenGL 엔진)
   `graphics::Mesh` 채우고 `ModelManager::AddModel()` 등록. `ProgressUpdated(int)` 시그널로 진행률.
 - → **`CommandImportUsd` 를 같은 패턴으로 신규 추가.** Mesh/Model/ModelManager 재사용(수정 불필요).
 
-### 4-2. 메시 데이터 구조 — USD·PhysX 둘 다 그대로 사용 가능
-- `src/graphics/mesh.{h,cpp}` — 정점/법선/인덱스를 **분리된 VBO** + `std::vector<glm::vec3>` 로 보관.
-  - `SetVertices/SetNormals/SetIndices/SetTexCoords`, `GetMinBound/GetMaxBound`(AABB).
-  - `UsdGeomMesh.GetPointsAttr()` / `GetFaceVertexIndicesAttr()` 결과가 이 구조에 바로 매핑.
-  - PhysX 콜라이더(triangle mesh / convex)도 이 vertices/indices 를 그대로 사용.
+### 4-2. 메시 데이터 구조 — USD·PhysX 입력 매핑
+- `src/graphics/mesh.{h,cpp}` — 정점/법선/UV/인덱스를 **분리된 VBO/EBO(GPU)** 로 업로드.
+  - 입력 setter: `SetVertices/SetNormals/SetIndices/SetTexCoords`.
+  - ⚠️ **CPU 측에 보존되는 건 `vertices_`(std::vector<glm::vec3>) 뿐.** 법선/인덱스는 VBO/EBO
+    로 올린 뒤 폐기되고, 남는 건 `index_count_` 와 접근자 `GetVertices()` 뿐(`GetIndices()` 없음).
+  - `UsdGeomMesh.GetPointsAttr()` / `GetFaceVertexIndicesAttr()` 결과는 위 setter 에 바로 매핑.
+  - PhysX collider: **convex/box 는 `GetVertices()`/AABB 로 OK.** 단 **triangle mesh 콜라이더는
+    인덱스가 필요**하므로, 먼저 `Mesh` 에 인덱스를 보존(또는 `GetIndices()` 추가)하는 선행 작업 필요.
 
 ### 4-3. 트랜스폼 — PhysX 결과를 쓰는 곳
 - `src/graphics/model.{h,cpp}` — `translation_/rotation_(degrees)/scale_` (glm::vec3),
@@ -104,8 +107,9 @@ Mini Creator (Qt/OpenGL 엔진)
 1. `cmake/3rdparty/physx.cmake` 추가 (NVIDIA-Omniverse/PhysX, 버전 핀). `PROJECT_LINK_LIBS` 연결.
 2. `src/graphics/physics/physics_world.{h,cpp}` 신규: `PxFoundation/PxPhysics/PxScene` 초기화,
    `Step(float dt)`, `Reset()`.
-3. 모델당 RigidBody 생성: AABB(`GetMinBound/MaxBound`) 기반 box collider 또는 mesh
-   vertices/indices 로 convex/triangle mesh. 바닥용 static plane 1개.
+3. 모델당 RigidBody 생성: AABB(`GetMinBound/MaxBound`) 기반 box collider 또는 `GetVertices()`
+   로 convex mesh. (triangle mesh 콜라이더가 필요하면 §4-2 의 인덱스 보존 선행 작업 먼저.)
+   바닥용 static plane 1개.
 4. `render_widget.cpp paintGL()` 에 `PhysicsWorld::Step(dt)` 삽입 → 결과를 `Model::SetTranslation/SetRotation`.
 5. `animation_menu` 에 Play/Pause/Step/Reset 연결.
 6. **검증**: 모델 import → Play → 중력으로 낙하·충돌하면 성공.
