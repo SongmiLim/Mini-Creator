@@ -7,6 +7,8 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(glm)
-set(PROJECT_LINK_LIBS ${PROJECT_LINK_LIBS} PRIVATE glm::glm)
+# PRIVATE/PUBLIC is applied once at the target_link_libraries call site, not
+# embedded in the accumulated variable.
+set(PROJECT_LINK_LIBS ${PROJECT_LINK_LIBS} glm::glm)
 
 

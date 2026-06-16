@@ -8,12 +8,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rd
 
 include(3rdparty)
 
-file(GLOB_RECURSE COMMANDS_SRC "src/commands/*.cpp" "src/commands/*.h")
-file(GLOB_RECURSE CORE_SRC "src/core/*.cpp" "src/core/*.h")
-file(GLOB_RECURSE GRAPHICS_SRC "src/graphics/*.cpp" "src/graphics/*.h" "src/graphics/physics/*.cpp" 
-"src/graphics/physics/*.h" "src/graphics/shader/*.cpp" "src/graphics/shader/*.h")
-file(GLOB_RECURSE UI_SRC "src/ui/*.cpp" "src/ui/*.h" "src/ui/widgets/*.cpp" "src/ui/widgets/*.h"
-"src/ui/menu_bar/*.cpp" "src/ui/menu_bar/*.h")
+# GLOB_RECURSE already descends into subdirectories, so each tree needs only
+# one pattern. CONFIGURE_DEPENDS re-globs on build so new files are picked up
+# without a manual CMake re-run.
+file(GLOB_RECURSE COMMANDS_SRC CONFIGURE_DEPENDS "src/commands/*.cpp" "src/commands/*.h")
+file(GLOB_RECURSE CORE_SRC CONFIGURE_DEPENDS "src/core/*.cpp" "src/core/*.h")
+file(GLOB_RECURSE GRAPHICS_SRC CONFIGURE_DEPENDS "src/graphics/*.cpp" "src/graphics/*.h")
+file(GLOB_RECURSE UI_SRC CONFIGURE_DEPENDS "src/ui/*.cpp" "src/ui/*.h")
 
 qt_add_executable(${PROJECT_NAME}
     src/main.cpp
