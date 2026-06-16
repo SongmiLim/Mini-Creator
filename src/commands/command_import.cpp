@@ -36,6 +36,9 @@ void CommandImport::Execute(const QString &file_path) {
   ProcessNode(scene->mRootNode, scene, model);
 
   core::ModelManager::AddModel(model);
+
+  progress_value_ = 100;
+  emit ProgressUpdated(progress_value_);
 }
 
 void CommandImport::ProcessNode(aiNode *node, const aiScene *scene,
@@ -47,7 +50,13 @@ void CommandImport::ProcessNode(aiNode *node, const aiScene *scene,
     model->AddMesh(new_mesh);
   }
 
-  progress_value_ += (50 / scene->mRootNode->mNumChildren);
+  const unsigned int root_child_count = scene->mRootNode->mNumChildren;
+  if (root_child_count > 0) {
+    progress_value_ += static_cast<int>(50 / root_child_count);
+  }
+  if (progress_value_ > 100) {
+    progress_value_ = 100;
+  }
   emit ProgressUpdated(progress_value_);
 
   for (unsigned int i = 0; i < node->mNumChildren; i++) {
@@ -61,8 +70,9 @@ CommandImport::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
 
   std::vector<glm::vec3> vertices(mesh->mNumVertices);
   std::vector<glm::vec3> normals(mesh->mNumVertices);
-  std::vector<unsigned int> indices(mesh->mNumFaces * 3);
   std::vector<glm::vec2> tex_coords(mesh->mNumVertices);
+  std::vector<unsigned int> indices;
+  indices.reserve(mesh->mNumFaces * 3);
 
   for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
     vertices[i] = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y,
@@ -75,7 +85,7 @@ CommandImport::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
       tex_coords[i] = glm::vec2(mesh->mTextureCoords[0][i].x,
                                 1.0f - mesh->mTextureCoords[0][i].y);
     } else {
-      tex_coords.push_back(glm::vec2(0.0f, 0.0f));
+      tex_coords[i] = glm::vec2(0.0f, 0.0f);
     }
   }
 
